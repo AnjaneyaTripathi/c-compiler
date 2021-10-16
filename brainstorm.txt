@@ -1,0 +1,28 @@
+TARGET:
+
+program
+    header files
+    body
+        statements
+        loops
+            statements
+        statements
+        loops
+            statements
+            loops
+                statements
+        statements
+
+
+PARSER_v1:
+
+body
+    statements
+    loops
+        statements
+    statements
+    loops
+        statements
+        loops
+            statements
+    statements
