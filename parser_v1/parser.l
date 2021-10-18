@@ -10,7 +10,6 @@ unary	"++"|"--"
 %%
 
 "for"	    { return FOR; }
-"printf"    { return PRINTF; }
 {binary}	{ return BINARY; }
 {unary}	    { return UNARY; }
 {num}	    { return NUMBER; }
