@@ -15,6 +15,8 @@ unary	 "++"|"--"
 "else"	                { return ELSE; }
 "true"                  { return TRUE; }
 "false"                 { return FALSE; }
+"printf"                { return PRINTFF; }
+"scanf"                 { return SCANFF; }
 ^"#include"[ ]*<.+\.h>  { return INCLUDE; }
 "return"                { return RETURN; }
 {binary}	            { return BINARY; }
@@ -24,6 +26,7 @@ unary	 "++"|"--"
 {id}	                { return ID; }
 [ \n\t]	                { ; } 
 .	                    {return *yytext; }
+["].*["]                { return STRLT; }
 
 %%
 

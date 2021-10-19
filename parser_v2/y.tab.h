@@ -60,7 +60,10 @@ extern int yydebug;
     DATATYPE = 266,
     TRUE = 267,
     FALSE = 268,
-    RETURN = 269
+    RETURN = 269,
+    PRINTFF = 270,
+    SCANFF = 271,
+    STRLT = 272
   };
 #endif
 /* Tokens.  */
@@ -76,6 +79,9 @@ extern int yydebug;
 #define TRUE 267
 #define FALSE 268
 #define RETURN 269
+#define PRINTFF 270
+#define SCANFF 271
+#define STRLT 272
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

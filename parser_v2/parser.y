@@ -4,7 +4,7 @@
     int yylex();
 %}
 
-%token INCLUDE FOR IF ELSE ID NUMBER UNARY BINARY DATATYPE TRUE FALSE RETURN
+%token INCLUDE FOR IF ELSE ID NUMBER UNARY BINARY DATATYPE TRUE FALSE RETURN PRINTFF SCANFF STRLT
 
 %%
 
@@ -42,6 +42,19 @@ statement: ID BINARY statement
 | UNARY ID
 | ID
 | NUMBER
+| DATATYPE variable
+| PRINTFF '(' STRLT ')'
+| SCANFF '(' STRLT ',' '&' ID ')'
+;
+
+variable: ID array
+| '*' variable
+;
+
+array: '[' NUMBER ']' array 
+|  '[' ID ']' array 
+| '[' ']' array 
+|  
 ;
 
 condition: condition BINARY condition
