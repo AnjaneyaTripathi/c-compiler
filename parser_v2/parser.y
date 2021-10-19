@@ -4,7 +4,7 @@
     int yylex();
 %}
 
-%token INCLUDE FOR ID NUMBER UNARY BINARY DATATYPE RETURN
+%token INCLUDE FOR IF ELSE ID NUMBER UNARY BINARY DATATYPE TRUE FALSE RETURN
 
 %%
 
@@ -20,8 +20,10 @@ main: DATATYPE ID
 
 body: expressions
 | loops
-| program expressions
-| program loops
+| conditionals
+| body expressions
+| body loops
+| body conditionals
 ;
 
 loops: FOR '(' statement ';' statement ';' statement ')' '{' body '}'
@@ -31,11 +33,26 @@ expressions: expressions statement ';'
 | statement ';'
 ;
 
+conditionals: IF '(' condition ')' '{' expressions '}'
+| IF '(' condition ')' '{' expressions '}' ELSE '{' expressions '}'
+;
+
 statement: ID BINARY statement
 | ID UNARY
 | UNARY ID
 | ID
 | NUMBER
+;
+
+condition: condition BINARY condition
+| boolean
+;
+
+boolean: ID BINARY ID
+| ID BINARY NUMBER
+| NUMBER BINARY ID
+| TRUE
+| FALSE
 ;
 
 return: RETURN NUMBER ';'

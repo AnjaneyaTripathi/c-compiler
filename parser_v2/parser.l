@@ -11,6 +11,10 @@ unary	 "++"|"--"
 %%
 
 "for"	                { return FOR; }
+"if"	                { return IF; }
+"else"	                { return ELSE; }
+"true"                  { return TRUE; }
+"false"                 { return FALSE; }
 ^"#include"[ ]*<.+\.h>  { return INCLUDE; }
 "return"                { return RETURN; }
 {binary}	            { return BINARY; }

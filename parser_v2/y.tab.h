@@ -51,23 +51,31 @@ extern int yydebug;
   {
     INCLUDE = 258,
     FOR = 259,
-    ID = 260,
-    NUMBER = 261,
-    UNARY = 262,
-    BINARY = 263,
-    DATATYPE = 264,
-    RETURN = 265
+    IF = 260,
+    ELSE = 261,
+    ID = 262,
+    NUMBER = 263,
+    UNARY = 264,
+    BINARY = 265,
+    DATATYPE = 266,
+    TRUE = 267,
+    FALSE = 268,
+    RETURN = 269
   };
 #endif
 /* Tokens.  */
 #define INCLUDE 258
 #define FOR 259
-#define ID 260
-#define NUMBER 261
-#define UNARY 262
-#define BINARY 263
-#define DATATYPE 264
-#define RETURN 265
+#define IF 260
+#define ELSE 261
+#define ID 262
+#define NUMBER 263
+#define UNARY 264
+#define BINARY 265
+#define DATATYPE 266
+#define TRUE 267
+#define FALSE 268
+#define RETURN 269
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

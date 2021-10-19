@@ -2,16 +2,35 @@ TARGET:
 
 program
     header files
-    body
-        statements
-        loops
-            statements
-        statements
-        loops
+    main function
+        body
             statements
             loops
                 statements
-        statements
+            statements
+            loops
+                statements
+                loops
+                    statements
+            statements
+        return
+
+PARSER_v2:
+
+program
+    header files
+    main function
+        body
+            statements
+            loops
+                statements
+            statements
+            loops
+                statements
+                loops
+                    statements
+            statements
+        return 
 
 
 PARSER_v1:
