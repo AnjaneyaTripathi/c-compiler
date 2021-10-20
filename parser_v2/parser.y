@@ -17,7 +17,7 @@
         char * type;
         int line_no;
 	} symbolTable[20];
-    char count=0;
+    int count=0;
     int q;
     extern int countn;
 
@@ -34,7 +34,7 @@ headers: headers INCLUDE { add('H'); }
 | INCLUDE { add('H'); }
 ;
 
-main: DATATYPE ID
+main: DATATYPE { add('K'); } ID
 ;
 
 body: expressions
@@ -45,7 +45,7 @@ body: expressions
 | body conditionals
 ;
 
-loops: FOR '(' statement ';' statement ';' statement ')' '{' body '}'
+loops: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}'
 ;
 
 expressions: expressions statement ';'
@@ -101,6 +101,7 @@ int main() {
 	printf("\nsymbol \t identify \t line number\n");
 	printf("_______________________________________________________________________________________\n");
 	int i=0;
+	printf("%d",count);
 	for(i=0;i<count;i++){
 		printf("%s\t%s\t%d\t\n",symbolTable[i].id_name,symbolTable[i].type,symbolTable[i].line_no);
 		
@@ -128,6 +129,7 @@ int  search(char *type)
 
 void add(char c){
     q=search(yytext);
+	printf(yytext);
 	if(q==0){
 		if(c=='H')
 		{
@@ -135,6 +137,27 @@ void add(char c){
 			// symbolTable[count].data_type=strdup(type);
 			symbolTable[count].line_no = countn;
 			symbolTable[count].type=strdup("Header");
+			count++;
+		}
+		else if(c =='K'){
+			symbolTable[count].id_name=strdup(yytext);
+			//symbolTable[count].data_type=strdup('N/A')
+			symbolTable[count].line_no = countn;
+			symbolTable[count].type=strdup("Keyword");
+			count++;
+		}
+		else if(c=='V'){
+			symbolTable[count].id_name=strdup(yytext);
+			// symbolTable[count].data_type=strdup(type);
+			symbolTable[count].line_no = countn;
+			symbolTable[count].type=strdup("Variable");
+			count++;
+		}
+		else if(c=='C'){
+			symbolTable[count].id_name=strdup(yytext);
+			// symbolTable[count].data_type=strdup(type);
+			symbolTable[count].line_no = countn;
+			symbolTable[count].type=strdup("Constant");
 			count++;
 		}
     }
