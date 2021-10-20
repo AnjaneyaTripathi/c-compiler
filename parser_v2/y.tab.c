@@ -69,27 +69,13 @@
 #line 1 "parser.y"
 
     #include<stdio.h>
-    #include<string.h>
-    #include<stdlib.h>
-    #include<ctype.h>
-    #include "lex.yy.c"
+
     void yyerror(const char *s);
     int yylex();
     int yywrap();
-    void add(char);
-
-    struct dataType{
-        char * id_name;
-        // char * data_type;
-        char * type;
-        int line_no;
-	} symbolTable[20];
-    char count=0;
-    int q;
-    extern int countn;
 
 
-#line 93 "y.tab.c"
+#line 79 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -547,11 +533,11 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    28,    28,    31,    32,    35,    38,    39,    40,    41,
-      42,    43,    46,    49,    50,    53,    54,    57,    58,    59,
-      60,    61,    62,    63,    64,    67,    68,    71,    72,    73,
-      74,    77,    78,    81,    82,    83,    84,    85,    88,    89,
-      90
+       0,    14,    14,    17,    18,    21,    24,    25,    26,    27,
+      28,    29,    32,    35,    36,    39,    40,    43,    44,    45,
+      46,    47,    48,    49,    50,    53,    54,    57,    58,    59,
+      60,    63,    64,    67,    68,    69,    70,    71,    74,    75,
+      76
 };
 #endif
 
@@ -1402,20 +1388,8 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 3:
-#line 31 "parser.y"
-                         { add('H'); }
-#line 1409 "y.tab.c"
-    break;
 
-  case 4:
-#line 32 "parser.y"
-          { add('H'); }
-#line 1415 "y.tab.c"
-    break;
-
-
-#line 1419 "y.tab.c"
+#line 1393 "y.tab.c"
 
       default: break;
     }
@@ -1647,54 +1621,13 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 93 "parser.y"
+#line 79 "parser.y"
 
 
 int main() {
     yyparse();
-    printf("\t\t\tSymbol table\n");
-	printf("#######################################################################################\n");	
-	printf("\nsymbol \t identify \t line number\n");
-	printf("_______________________________________________________________________________________\n");
-	int i=0;
-	for(i=0;i<count;i++){
-		printf("%s\t%s\t%d\t\n",symbolTable[i].id_name,symbolTable[i].type,symbolTable[i].line_no);
-		
-	}
-	for(i=0;i<count;i++){
-		free(symbolTable[i].id_name);
-		free(symbolTable[i].type);
-	}
 }
 
-int  search(char *type)
-{
-	int i;
-	for(i=count -1 ;i>=0;i--)
-	{
-		if(strcmp(symbolTable[i].id_name,type)==0)
-		{
-			return -1;
-			break;
-		}
-	
-	}
-	return 0;
-}
-
-void add(char c){
-    q=search(yytext);
-	if(q==0){
-		if(c=='H')
-		{
-			symbolTable[count].id_name=strdup(yytext);
-			// symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
-			symbolTable[count].type=strdup("Header");
-			count++;
-		}
-    }
-}
 
 void yyerror(const char* msg) {
     fprintf(stderr, "%s\n", msg);

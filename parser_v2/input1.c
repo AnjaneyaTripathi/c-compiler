@@ -14,7 +14,6 @@ int main(){
     int y;
     y= m*4;
     printf("hey");
-    scanf("%d", &name);
 
     for(i=0;i<5;i++){
         int a;
