@@ -10,15 +10,18 @@
     void add(char);
     void insert_type();
     int search(char *);
+	void insert_type();
+
 
     struct dataType{
         char * id_name;
-        // char * data_type;
+        char * data_type;
         char * type;
         int line_no;
 	} symbolTable[20];
     int count=0;
     int q;
+	char type[10];
     extern int countn;
 
 %}
@@ -34,7 +37,7 @@ headers: headers INCLUDE { add('H'); }
 | INCLUDE { add('H'); }
 ;
 
-main: DATATYPE { add('K'); } ID
+main: DATATYPE { insert_type(); } ID
 ;
 
 body: expressions
@@ -52,8 +55,11 @@ expressions: expressions statement ';'
 | statement ';'
 ;
 
-conditionals: IF '(' condition ')' '{' expressions '}'
-| IF '(' condition ')' '{' expressions '}' ELSE '{' expressions '}'
+conditionals: IF { add('K'); } '(' condition ')' '{' expressions '}' else
+;
+
+else: ELSE { add('K'); } '{' expressions '}'
+|
 ;
 
 statement: ID BINARY statement
@@ -61,7 +67,7 @@ statement: ID BINARY statement
 | UNARY ID
 | ID
 | NUMBER
-| DATATYPE variable
+| DATATYPE { insert_type(); } variable
 | PRINTFF '(' STRLT ')'
 | SCANFF '(' STRLT ',' '&' ID ')'
 ;
@@ -83,12 +89,12 @@ condition: condition BINARY condition
 boolean: ID BINARY ID
 | ID BINARY NUMBER
 | NUMBER BINARY ID
-| TRUE
-| FALSE
+| TRUE { add('K'); }
+| FALSE { add('K'); }
 ;
 
-return: RETURN NUMBER ';'
-| RETURN ID ';'
+return: RETURN { add('K'); } NUMBER ';'
+| RETURN { add('K'); } ID ';'
 |
 ;
 
@@ -99,10 +105,10 @@ int main() {
     printf("\t\t\tSymbol table\n");
 	printf("#######################################################################################\n");	
 	printf("\nsymbol \t identify \t line number\n");
-	printf("_______________________________________________________________________________________\n");
+	printf("_____________________________\n");
 	int i=0;
 	for(i=0;i<count;i++){
-		printf("%s\t%s\t%d\t\n",symbolTable[i].id_name,symbolTable[i].type,symbolTable[i].line_no);
+		printf("%s\t%s\t%s\t%d\t\n",symbolTable[i].id_name, symbolTable[i].data_type, symbolTable[i].type, symbolTable[i].line_no);
 		
 	}
 	for(i=0;i<count;i++){
@@ -132,33 +138,37 @@ void add(char c){
 		if(c=='H')
 		{
 			symbolTable[count].id_name=strdup(yytext);
-			// symbolTable[count].data_type=strdup(type);
+			symbolTable[count].data_type=strdup(type);
 			symbolTable[count].line_no = countn;
 			symbolTable[count].type=strdup("Header");
 			count++;
 		}
 		else if(c =='K'){
 			symbolTable[count].id_name=strdup(yytext);
-			//symbolTable[count].data_type=strdup('N/A')
+			symbolTable[count].data_type=strdup("N/A");
 			symbolTable[count].line_no = countn;
 			symbolTable[count].type=strdup("Keyword");
 			count++;
 		}
-		else if(c=='V'){
-			symbolTable[count].id_name=strdup(yytext);
-			// symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
-			symbolTable[count].type=strdup("Variable");
-			count++;
-		}
-		else if(c=='C'){
-			symbolTable[count].id_name=strdup(yytext);
-			// symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
-			symbolTable[count].type=strdup("Constant");
-			count++;
-		}
+		// else if(c=='V'){
+		// 	symbolTable[count].id_name=strdup(yytext);
+		// 	// symbolTable[count].data_type=strdup(type);
+		// 	symbolTable[count].line_no = countn;
+		// 	symbolTable[count].type=strdup("Variable");
+		// 	count++;
+		// }
+		// else if(c=='C'){
+		// 	symbolTable[count].id_name=strdup(yytext);
+		// 	// symbolTable[count].data_type=strdup(type);
+		// 	symbolTable[count].line_no = countn;
+		// 	symbolTable[count].type=strdup("Constant");
+		// 	count++;
+		// }
     }
+}
+
+void insert_type(){
+	strcpy(type,yytext);
 }
 
 void yyerror(const char* msg) {
