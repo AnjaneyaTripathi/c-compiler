@@ -20,8 +20,6 @@ int main(){
         for(j=0; j<10; j++){
             x = y;
         }
-        l = m/n;
-
         if(true){
             i=j;
         }

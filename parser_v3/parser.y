@@ -62,22 +62,22 @@ else: ELSE { add('K'); } '{' expressions '}'
 |
 ;
 
-statement: ID BINARY statement
-| ID UNARY
-| UNARY ID
-| ID
-| NUMBER
+statement: ID { add('V'); } BINARY statement
+| ID { add('V'); } UNARY
+| UNARY ID { add('V'); }
+| ID { add('V'); }
+| NUMBER { add('C'); }
 | DATATYPE { insert_type(); } variable
 | PRINTFF '(' STRLT ')'
-| SCANFF '(' STRLT ',' '&' ID ')'
+| SCANFF '(' STRLT ',' '&' ID { add('V'); } ')'
 ;
 
-variable: ID array
-| '*' variable
+variable: ID { add('V'); } array
+| '*' variable { add('V'); }
 ;
 
-array: '[' NUMBER ']' array 
-|  '[' ID ']' array 
+array: '[' NUMBER { add('C'); } ']' array 
+|  '[' ID { add('V'); } ']' array 
 | '[' ']' array 
 |  
 ;
@@ -86,15 +86,15 @@ condition: condition BINARY condition
 | boolean
 ;
 
-boolean: ID BINARY ID
-| ID BINARY NUMBER
-| NUMBER BINARY ID
+boolean: ID { add('V'); } BINARY ID { add('V'); }
+| ID BINARY NUMBER { add('C'); }
+| NUMBER { add('C'); } BINARY ID { add('V'); }
 | TRUE { add('K'); }
 | FALSE { add('K'); }
 ;
 
-return: RETURN { add('K'); } NUMBER ';'
-| RETURN { add('K'); } ID ';'
+return: RETURN { add('K'); } NUMBER { add('C'); } ';'
+| RETURN { add('K'); } ID { add('V'); } ';'
 |
 ;
 
@@ -150,20 +150,20 @@ void add(char c){
 			symbolTable[count].type=strdup("Keyword");
 			count++;
 		}
-		// else if(c=='V'){
-		// 	symbolTable[count].id_name=strdup(yytext);
-		// 	// symbolTable[count].data_type=strdup(type);
-		// 	symbolTable[count].line_no = countn;
-		// 	symbolTable[count].type=strdup("Variable");
-		// 	count++;
-		// }
-		// else if(c=='C'){
-		// 	symbolTable[count].id_name=strdup(yytext);
-		// 	// symbolTable[count].data_type=strdup(type);
-		// 	symbolTable[count].line_no = countn;
-		// 	symbolTable[count].type=strdup("Constant");
-		// 	count++;
-		// }
+		else if(c=='V'){
+			symbolTable[count].id_name=strdup(yytext);
+			symbolTable[count].data_type=strdup(type);
+			symbolTable[count].line_no = countn;
+			symbolTable[count].type=strdup("Variable");
+			count++;
+		}
+		else if(c=='C'){
+			symbolTable[count].id_name=strdup(yytext);
+			symbolTable[count].data_type=strdup(type);
+			symbolTable[count].line_no = countn;
+			symbolTable[count].type=strdup("Constant");
+			count++;
+		}
     }
 }
 
