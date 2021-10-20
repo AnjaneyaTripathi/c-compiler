@@ -14,7 +14,6 @@ int main(){
     int y;
     y= m*4;
     printf("hey");
-    scanf("%d", &name);
 
     for(i=0;i<5;i++){
         int a;
@@ -27,11 +26,9 @@ int main(){
         if(true){
             i=j;
         }
-        else{
-            i=m;
-        }
+        
     }
     int q;
     q = r*s;
-    return 0;
+    return 1;
 }

@@ -14,10 +14,6 @@ int main(){
     int y;
     y= m*4;
     printf("hey");
-<<<<<<< HEAD
-=======
-
->>>>>>> 779a69c3e10171b83aefbf93aaa99e12e695a26c
     for(i=0;i<5;i++){
         int a;
         a = b+c;
