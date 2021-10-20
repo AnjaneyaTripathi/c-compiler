@@ -162,8 +162,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -479,6 +498,12 @@ static const flex_int16_t yy_chk[150] =
        85,   85,   85,   85,   85,   85,   85,   85,   85
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[20] =
+    {   0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+        };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -496,8 +521,9 @@ char *yytext;
 #line 1 "parser.l"
 #line 2 "parser.l"
     #include "y.tab.h"
-#line 500 "lex.yy.c"
-#line 501 "lex.yy.c"
+    int countn=0;
+#line 526 "lex.yy.c"
+#line 527 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -717,10 +743,10 @@ YY_DECL
 		}
 
 	{
-#line 12 "parser.l"
+#line 14 "parser.l"
 
 
-#line 724 "lex.yy.c"
+#line 750 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -767,6 +793,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -780,101 +816,101 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 14 "parser.l"
+#line 16 "parser.l"
 { return FOR; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 15 "parser.l"
+#line 17 "parser.l"
 { return IF; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 16 "parser.l"
+#line 18 "parser.l"
 { return ELSE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "parser.l"
+#line 19 "parser.l"
 { return TRUE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 18 "parser.l"
+#line 20 "parser.l"
 { return FALSE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 19 "parser.l"
+#line 21 "parser.l"
 { return PRINTFF; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 20 "parser.l"
+#line 22 "parser.l"
 { return SCANFF; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 21 "parser.l"
+#line 23 "parser.l"
 { return INCLUDE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 22 "parser.l"
+#line 24 "parser.l"
 { return RETURN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 23 "parser.l"
+#line 25 "parser.l"
 { return BINARY; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 24 "parser.l"
+#line 26 "parser.l"
 { return UNARY; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 25 "parser.l"
+#line 27 "parser.l"
 { return NUMBER; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 26 "parser.l"
+#line 28 "parser.l"
 { return DATATYPE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 27 "parser.l"
+#line 29 "parser.l"
 { return ID; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 28 "parser.l"
+#line 30 "parser.l"
 { ; }
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 29 "parser.l"
-{ ; }
+#line 31 "parser.l"
+{ countn++; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 30 "parser.l"
+#line 32 "parser.l"
 {return *yytext; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 31 "parser.l"
+#line 33 "parser.l"
 { return STRLT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 33 "parser.l"
+#line 35 "parser.l"
 ECHO;
 	YY_BREAK
-#line 878 "lex.yy.c"
+#line 914 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1243,6 +1279,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1321,6 +1361,10 @@ static int yy_get_next_buffer (void)
 	(yy_hold_char) = *++(yy_c_buf_p);
 
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1788,6 +1832,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -1882,7 +1929,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 33 "parser.l"
+#line 35 "parser.l"
 
 
 int yywrap() {

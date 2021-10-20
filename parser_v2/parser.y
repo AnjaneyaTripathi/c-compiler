@@ -1,25 +1,9 @@
 %{
     #include<stdio.h>
-    #include<string.h>
-    #include<stdlib.h>
-    #include<ctype.h>
-    #include "lex.yy.c"
+
     void yyerror(const char *s);
     int yylex();
     int yywrap();
-    void add(char);
-    void insert_type();
-    int search(char *);
-
-    struct dataType{
-        char * id_name;
-        // char * data_type;
-        char * type;
-        int line_no;
-	} symbolTable[20];
-    int count=0;
-    int q;
-    extern int countn;
 
 %}
 
@@ -30,8 +14,8 @@
 program: headers main '(' ')' '{' body return '}'
 ;
 
-headers: headers INCLUDE { add('H'); } 
-| INCLUDE { add('H'); }
+headers: headers INCLUDE
+| INCLUDE
 ;
 
 main: DATATYPE { add('K'); } ID
@@ -96,71 +80,6 @@ return: RETURN NUMBER ';'
 
 int main() {
     yyparse();
-    printf("\t\t\tSymbol table\n");
-	printf("#######################################################################################\n");	
-	printf("\nsymbol \t identify \t line number\n");
-	printf("_______________________________________________________________________________________\n");
-	int i=0;
-	printf("%d",count);
-	for(i=0;i<count;i++){
-		printf("%s\t%s\t%d\t\n",symbolTable[i].id_name,symbolTable[i].type,symbolTable[i].line_no);
-		
-	}
-	for(i=0;i<count;i++){
-		free(symbolTable[i].id_name);
-		free(symbolTable[i].type);
-	}
-}
-
-int  search(char *type)
-{
-	int i;
-	for(i=count -1 ;i>=0;i--)
-	{
-		if(strcmp(symbolTable[i].id_name,type)==0)
-		{
-			return -1;
-			break;
-		}
-	
-	}
-	return 0;
-}
-
-void add(char c){
-    q=search(yytext);
-	printf(yytext);
-	if(q==0){
-		if(c=='H')
-		{
-			symbolTable[count].id_name=strdup(yytext);
-			// symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
-			symbolTable[count].type=strdup("Header");
-			count++;
-		}
-		else if(c =='K'){
-			symbolTable[count].id_name=strdup(yytext);
-			//symbolTable[count].data_type=strdup('N/A')
-			symbolTable[count].line_no = countn;
-			symbolTable[count].type=strdup("Keyword");
-			count++;
-		}
-		else if(c=='V'){
-			symbolTable[count].id_name=strdup(yytext);
-			// symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
-			symbolTable[count].type=strdup("Variable");
-			count++;
-		}
-		else if(c=='C'){
-			symbolTable[count].id_name=strdup(yytext);
-			// symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
-			symbolTable[count].type=strdup("Constant");
-			count++;
-		}
-    }
 }
 
 void yyerror(const char* msg) {
