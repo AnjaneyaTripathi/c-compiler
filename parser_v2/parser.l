@@ -1,6 +1,9 @@
 %{
     #include "y.tab.h"
+    int countn=0;
 %}
+%option yylineno
+
 
 num	     [0-9]+
 datatype "int"|"float"|"char"|"void"
@@ -24,7 +27,8 @@ unary	 "++"|"--"
 {num}	                { return NUMBER; }
 {datatype}              { return DATATYPE; }
 {id}	                { return ID; }
-[ \n\t]	                { ; } 
+[ \t]*                  { ; }
+[\n]                    { countn++; }
 .	                    {return *yytext; }
 ["].*["]                { return STRLT; }
 

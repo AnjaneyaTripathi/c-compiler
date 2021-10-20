@@ -69,10 +69,27 @@
 #line 1 "parser.y"
 
     #include<stdio.h>
+    #include<string.h>
+    #include<stdlib.h>
+    #include<ctype.h>
+    #include "lex.yy.c"
     void yyerror(const char *s);
     int yylex();
+    int yywrap();
+    void add(char);
 
-#line 76 "y.tab.c"
+    struct dataType{
+        char * id_name;
+        // char * data_type;
+        char * type;
+        int line_no;
+	} symbolTable[20];
+    char count=0;
+    int q;
+    extern int countn;
+
+
+#line 93 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -530,11 +547,11 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    11,    11,    14,    15,    18,    21,    22,    23,    24,
-      25,    26,    29,    32,    33,    36,    37,    40,    41,    42,
-      43,    44,    45,    46,    47,    50,    51,    54,    55,    56,
-      57,    60,    61,    64,    65,    66,    67,    68,    71,    72,
-      73
+       0,    28,    28,    31,    32,    35,    38,    39,    40,    41,
+      42,    43,    46,    49,    50,    53,    54,    57,    58,    59,
+      60,    61,    62,    63,    64,    67,    68,    71,    72,    73,
+      74,    77,    78,    81,    82,    83,    84,    85,    88,    89,
+      90
 };
 #endif
 
@@ -577,7 +594,7 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       4,   -51,    12,    26,   -51,    23,     4,    17,   -51,    42,
+       4,   -51,    12,    26,   -51,   -51,    23,    17,   -51,    42,
       30,    87,    37,    45,     0,   -51,    63,    -1,    53,    58,
       74,   -51,    51,   -51,    62,    51,    41,   -51,    51,   -51,
       54,    -1,   -51,    69,    70,    31,   -51,    51,   -51,    72,
@@ -594,7 +611,7 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     4,     0,     0,     1,     0,     3,     0,     5,     0,
+       0,     4,     0,     0,     1,     3,     0,     0,     5,     0,
        0,     0,     0,     0,    20,    21,     0,     0,     0,     0,
       40,     7,     6,     8,     0,     0,     0,    18,     0,    19,
       30,     0,    22,     0,     0,     0,    10,     9,    11,     0,
@@ -609,14 +626,14 @@ static const yytype_int8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -51,   -51,   119,   -51,    29,   -19,   -20,   -18,   -17,    93,
+     -51,   -51,   -51,   -51,    28,   -19,   -20,   -18,   -17,    93,
      -50,    59,   -51,   -51
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     6,     7,    20,    21,    22,    23,    24,    32,
+      -1,     2,     3,     7,    20,    21,    22,    23,    24,    32,
       51,    47,    48,    39
 };
 
@@ -627,8 +644,8 @@ static const yytype_int8 yytable[] =
 {
       37,    36,    38,    64,    65,    40,    30,     1,    42,    27,
       28,    49,     4,    62,    12,    13,    79,    14,    15,    16,
-      40,    17,    63,    66,    31,    18,    19,    83,    84,     1,
-       8,    95,    14,    15,    16,     9,    17,     5,    55,    56,
+      40,    17,    63,    66,    31,    18,    19,    83,    84,     5,
+       8,    95,    14,    15,    16,     9,    17,     6,    55,    56,
       18,    19,    71,    14,    15,    16,    87,    17,    43,    44,
       11,    18,    19,    45,    46,    25,    82,    96,    14,    15,
       16,    10,    17,    26,    86,    40,    18,    19,    72,    73,
@@ -636,8 +653,8 @@ static const yytype_int8 yytable[] =
       50,    14,    15,    16,    41,    17,    53,    54,    35,    18,
       19,    12,    13,    57,    14,    15,    16,    58,    17,    59,
       60,    61,    18,    19,    67,    68,    69,    74,    70,    76,
-      77,    62,    85,    88,    90,    78,    80,    81,    89,     3,
-      93,    75,    91,    92,    52
+      77,    62,    85,    88,    90,    78,    80,    81,    89,    93,
+       0,    75,    91,    92,    52
 };
 
 static const yytype_int8 yycheck[] =
@@ -653,15 +670,15 @@ static const yytype_int8 yycheck[] =
       26,     7,     8,     9,    22,    11,    17,    17,    14,    15,
       16,     4,     5,    21,     7,     8,     9,    22,    11,    22,
       10,    10,    15,    16,    19,    23,    22,     7,    22,    20,
-      27,    10,     7,    19,     6,    27,    24,    22,    19,     0,
-      91,    62,    20,    20,    31
+      27,    10,     7,    19,     6,    27,    24,    22,    19,    91,
+      -1,    62,    20,    20,    31
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    29,    30,     0,    11,    30,    31,     7,    18,
+       0,     3,    29,    30,     0,     3,    11,    31,     7,    18,
       19,    20,     4,     5,     7,     8,     9,    11,    15,    16,
       32,    33,    34,    35,    36,    18,    18,     9,    10,     7,
        7,    25,    37,    18,    18,    14,    33,    34,    35,    41,
@@ -1385,8 +1402,20 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+  case 3:
+#line 31 "parser.y"
+                         { add('H'); }
+#line 1409 "y.tab.c"
+    break;
 
-#line 1390 "y.tab.c"
+  case 4:
+#line 32 "parser.y"
+          { add('H'); }
+#line 1415 "y.tab.c"
+    break;
+
+
+#line 1419 "y.tab.c"
 
       default: break;
     }
@@ -1618,11 +1647,53 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 76 "parser.y"
+#line 93 "parser.y"
 
 
 int main() {
     yyparse();
+    printf("\t\t\tSymbol table\n");
+	printf("#######################################################################################\n");	
+	printf("\nsymbol \t identify \t line number\n");
+	printf("_______________________________________________________________________________________\n");
+	int i=0;
+	for(i=0;i<count;i++){
+		printf("%s\t%s\t%d\t\n",symbolTable[i].id_name,symbolTable[i].type,symbolTable[i].line_no);
+		
+	}
+	for(i=0;i<count;i++){
+		free(symbolTable[i].id_name);
+		free(symbolTable[i].type);
+	}
+}
+
+int  search(char *type)
+{
+	int i;
+	for(i=count -1 ;i>=0;i--)
+	{
+		if(strcmp(symbolTable[i].id_name,type)==0)
+		{
+			return -1;
+			break;
+		}
+	
+	}
+	return 0;
+}
+
+void add(char c){
+    q=search(yytext);
+	if(q==0){
+		if(c=='H')
+		{
+			symbolTable[count].id_name=strdup(yytext);
+			// symbolTable[count].data_type=strdup(type);
+			symbolTable[count].line_no = countn;
+			symbolTable[count].type=strdup("Header");
+			count++;
+		}
+    }
 }
 
 void yyerror(const char* msg) {
