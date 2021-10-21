@@ -1,33 +1,26 @@
-#include<iostream.h>
+#include<stdio.h>
 #include<conio.h>
 
-int main(){
+int main() {
     int x;
-    x = y+3;
-    if(x>y){
-        i=j;
-    }
-    else{
-        int i;
-        i=m;
-    }
     int y;
-    y= m*4;
-    printf("hey");
-    for(i=0;i<5;i++){
-        int a;
-        a = b+c;
-        for(j=0; j<10; j++){
-            x = y;
-        }
-        if(true){
-            i=j;
-        }
-        else{
-            i=m;
+    int z;
+    float f;
+    x=3;
+    y=10;
+    z=5;
+    for(i=0; i<10; i++) {
+        printf("Hello World");
+        for(j=0; j<z; j++) {
+            printf("Bye World");
         }
     }
-    int q;
-    q = r*s;
+    if(y>z) {
+        char c;
+        c='A';
+    }
+    else {
+        f=3.14;
+    }
     return 0;
 }

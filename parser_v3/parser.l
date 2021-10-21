@@ -9,7 +9,7 @@
 num	     [0-9]+
 datatype "int"|"float"|"char"|"void"
 id	     [a-zA-Z]+
-relational	 =|<|>|!=|<=|>=|==|&&|"||"|[+-/*]
+binary	 =|<|>|!=|<=|>=|==|&&|"||"|[+-/*]
 unary	 "++"|"--"
 
 %%

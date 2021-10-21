@@ -12,8 +12,7 @@
     int search(char *);
 	void insert_type();
 
-
-    struct dataType{
+    struct dataType {
         char * id_name;
         char * data_type;
         char * type;
@@ -33,26 +32,26 @@
 program: headers main '(' ')' '{' body return '}'
 ;
 
-headers: headers INCLUDE { add('H'); } 
+headers: INCLUDE { add('H'); } headers
 | INCLUDE { add('H'); }
 ;
 
-main: DATATYPE { insert_type(); } ID
+main: DATATYPE { insert_type(); } ID { add('V'); }
 ;
 
 body: expressions
 | loops
 | conditionals
-| body expressions
-| body loops
-| body conditionals
+| expressions body
+| loops body
+| conditionals body
 ;
 
-loops: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}'
+loops: FOR { add('K'); } '(' statement statement statement ')' '{' body '}'
 ;
 
-expressions: expressions statement ';'
-| statement ';'
+expressions: statement expressions
+| statement
 ;
 
 conditionals: IF { add('K'); } '(' condition ')' '{' expressions '}' else
@@ -62,39 +61,42 @@ else: ELSE { add('K'); } '{' expressions '}'
 |
 ;
 
-statement: ID { add('V'); } BINARY statement
-| ID { add('V'); } UNARY
-| UNARY ID { add('V'); }
-| ID { add('V'); }
-| NUMBER { add('C'); }
+statement: DATATYPE { insert_type(); } ID { add('V'); } ';'
 | DATATYPE { insert_type(); } variable
-| PRINTFF '(' STRLT ')'
-| SCANFF '(' STRLT ',' '&' ID { add('V'); } ')'
+| ID BINARY statement
+| ID UNARY ';'
+| UNARY ID ';'
+| ID ';'
+| NUMBER { add('C'); } ';'
+| PRINTFF '(' STRLT ')' ';'
+| SCANFF '(' STRLT ',' '&' ID ')' ';'
 ;
 
-variable: ID { add('V'); } array
-| '*' variable { add('V'); }
+variable: ID array
+| '*' variable
+| ID { add('V'); } '=' NUMBER { add('C'); } ';'
+| ',' variable
 ;
 
 array: '[' NUMBER { add('C'); } ']' array 
-|  '[' ID { add('V'); } ']' array 
+| '[' ID ']' array 
 | '[' ']' array 
-|  
+| ';'
 ;
 
-condition: condition BINARY condition
+condition: condition BINARY boolean
 | boolean
 ;
 
-boolean: ID { add('V'); } BINARY ID { add('V'); }
+boolean: ID BINARY ID
 | ID BINARY NUMBER { add('C'); }
-| NUMBER { add('C'); } BINARY ID { add('V'); }
+| NUMBER { add('C'); } BINARY ID
 | TRUE { add('K'); }
 | FALSE { add('K'); }
 ;
 
 return: RETURN { add('K'); } NUMBER { add('C'); } ';'
-| RETURN { add('K'); } ID { add('V'); } ';'
+| RETURN { add('K'); } ID ';'
 |
 ;
 
@@ -107,57 +109,51 @@ int main() {
 	printf("\nsymbol \t identify \t line number\n");
 	printf("_____________________________\n");
 	int i=0;
-	for(i=0;i<count;i++){
-		printf("%s\t%s\t%s\t%d\t\n",symbolTable[i].id_name, symbolTable[i].data_type, symbolTable[i].type, symbolTable[i].line_no);
-		
+	for(i=0; i<count; i++) {
+		printf("%s\t%s\t%s\t%d\t\n", symbolTable[i].id_name, symbolTable[i].data_type, symbolTable[i].type, symbolTable[i].line_no);
 	}
-	for(i=0;i<count;i++){
+	for(i=0; i<count; i++){
 		free(symbolTable[i].id_name);
 		free(symbolTable[i].type);
 	}
 }
 
-int  search(char *type)
-{
+int search(char *type) {
 	int i;
-	for(i=count -1 ;i>=0;i--)
-	{
-		if(strcmp(symbolTable[i].id_name,type)==0)
-		{
+	for(i=count-1; i>=0; i--) {
+		if(strcmp(symbolTable[i].id_name,type)==0) {
 			return -1;
 			break;
 		}
-	
 	}
 	return 0;
 }
 
-void add(char c){
+void add(char c) {
     q=search(yytext);
-	if(q==0){
-		if(c=='H')
-		{
+	if(q==0) {
+		if(c=='H') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup(type);
 			symbolTable[count].line_no = countn;
 			symbolTable[count].type=strdup("Header");
 			count++;
 		}
-		else if(c =='K'){
+		else if(c =='K') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup("N/A");
 			symbolTable[count].line_no = countn;
 			symbolTable[count].type=strdup("Keyword");
 			count++;
 		}
-		else if(c=='V'){
+		else if(c=='V') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup(type);
 			symbolTable[count].line_no = countn;
 			symbolTable[count].type=strdup("Variable");
 			count++;
 		}
-		else if(c=='C'){
+		else if(c=='C') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup(type);
 			symbolTable[count].line_no = countn;
@@ -167,7 +163,7 @@ void add(char c){
     }
 }
 
-void insert_type(){
+void insert_type() {
 	strcpy(type,yytext);
 }
 
