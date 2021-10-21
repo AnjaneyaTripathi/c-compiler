@@ -18,7 +18,7 @@ headers: headers INCLUDE
 | INCLUDE
 ;
 
-main: DATATYPE { add('K'); } ID
+main: DATATYPE ID
 ;
 
 body: expressions
@@ -29,7 +29,7 @@ body: expressions
 | body conditionals
 ;
 
-loops: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}'
+loops: FOR '(' statement ';' statement ';' statement ')' '{' body '}'
 ;
 
 expressions: expressions statement ';'

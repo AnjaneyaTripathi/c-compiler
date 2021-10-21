@@ -15,7 +15,7 @@ unary	"++"|"--"
 {num}	    { return NUMBER; }
 {id}	    { return ID; }
 [ \n\t]	    { ; } 
-.	        {return *yytext; }
+.	        { return *yytext; }
 
 %%
 
