@@ -45,3 +45,113 @@ body
         loops
             statements
     statements
+
+
+PARSER_v4
+
+program
+    headers main ( ) { body return }
+headers
+    headers headers
+    INCLUDE
+main
+    datatype ID
+datatype    
+    INT
+    FLOAT
+    CHAR
+    VOID
+body
+    FOR ( statement ; statement ; statement ) { body }
+    assignment
+    defintion
+    body body
+    PRINTFF ( STRLT ) ;
+    SCANFF ( STRLT , & ID ) ;
+statement
+    datatype ID = NUMBER
+    datatype ID = ID
+    ID = NUMBER
+    ID = ID
+    ID relop NUMBER
+    ID relop ID
+    ID unary
+    unary ID
+defintion
+    datatype ID ;
+    datatype ID = ID ;
+    datatype ID = NUMBER ;
+assignment  
+    ID = expression ;
+expression
+    expression arithmetic expression
+    ID
+    NUMBER
+arithmetic
+    ADD
+    SUBTRACT
+    MULTIPLY
+    DIVIDE
+relop
+    LT
+    GT
+    LE
+    GE
+    EQ
+    NE
+return
+    RETURN NUMBER ;
+    RETURN ID ;
+    nothing
+
+
+
+################################
+program
+    headers main ( ) { body return }
+headers
+    headers headers
+    INCLUDE
+main
+    datatype ID
+datatype    
+    INT
+    FLOAT
+    CHAR
+    VOID
+body
+    FOR ( stmt1 ; stmt2 ; stmt3 ) { body }
+    IF ( condition ) { body } else
+    assignment
+    defintion
+    body body
+    PRINTFF ( STRLT ) ;
+    SCANFF ( STRLT , & ID ) ;
+else
+    ELSE { body }
+    nothing
+condition
+    condition AND boolean
+    condition OR boolean
+    NE condition
+    boolean
+boolean
+    expression relop expression
+    TRUE
+    FALSE
+    ID
+    NUMBER
+assignment  
+expression
+    x +-/* y
+relop
+    LT
+    GT
+    LE
+    GE
+    EQ
+    NE
+return
+    RETURN NUMBER ;
+    RETURN ID ;
+    nothing
