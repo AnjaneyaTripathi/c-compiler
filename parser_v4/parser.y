@@ -3,7 +3,7 @@
     #include<string.h>
     #include<stdlib.h>
     #include<ctype.h>
-    #include "lex.yy.c"
+    #include"lex.yy.c"
     void yyerror(const char *s);
     int yylex();
     int yywrap();
@@ -25,78 +25,71 @@
 
 %}
 
-%token INCLUDE FOR IF ELSE ID NUMBER UNARY BINARY DATATYPE TRUE FALSE RETURN PRINTFF SCANFF STRLT
+%token PRINTFF SCANFF INT FLOAT CHAR VOID RETURN FOR INCLUDE TRUE FALSE NUMBER ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY
 
 %%
 
-program: headers main '(' ')' '{' body return '}'
+program: headers main '(' ')' '{' body return ';' '}' 
 ;
 
-headers: INCLUDE { add('H'); } headers
+headers: headers headers
 | INCLUDE { add('H'); }
 ;
 
-main: DATATYPE { insert_type(); } ID { add('V'); }
+main: datatype ID { add('K'); }
 ;
 
-body: expressions
-| loops
-| conditionals
-| expressions body
-| loops body
-| conditionals body
+datatype: INT { insert_type(); }
+| FLOAT { insert_type(); }
+| CHAR { insert_type(); }
+| VOID { insert_type(); }
 ;
 
-loops: FOR { add('K'); } '(' statement statement statement ')' '{' body '}'
+body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}'
+| statement ';'
+| assignment ';'
+| body body
+| PRINTFF { add('K'); } '(' STR ')' ';'
+| SCANFF { add('K'); } '(' STR ',' '&' ID ')' ';'
 ;
 
-expressions: statement expressions
-| statement
+statement: datatype ID { add('V'); } init
+| ID '=' value
+| ID relop value
+| ID UNARY
+| UNARY ID
 ;
 
-conditionals: IF { add('K'); } '(' condition ')' '{' expressions '}' else
+init: '=' value
+| 
 ;
 
-else: ELSE { add('K'); } '{' expressions '}'
-|
+value: ID
+| NUMBER { add('C'); }
 ;
 
-statement: DATATYPE { insert_type(); } ID { add('V'); } ';'
-| DATATYPE { insert_type(); } variable
-| ID BINARY statement
-| ID UNARY ';'
-| UNARY ID ';'
-| ID ';'
-| NUMBER { add('C'); } ';'
-| PRINTFF '(' STRLT ')' ';'
-| SCANFF '(' STRLT ',' '&' ID ')' ';'
+assignment: ID '=' expression 
 ;
 
-variable: ID array
-| '*' variable
-| ID { add('V'); } '=' NUMBER { add('C'); } ';'
-| ',' variable
+expression: expression arithmetic expression
+| value
 ;
 
-array: '[' NUMBER { add('C'); } ']' array 
-| '[' ID ']' array 
-| '[' ']' array 
-| ';'
+arithmetic: ADD
+| SUBTRACT
+| MULTIPLY
+| DIVIDE
 ;
 
-condition: condition BINARY boolean
-| boolean
+relop: LT
+| GT
+| LE
+| GE
+| EQ
+| NE
 ;
 
-boolean: ID BINARY ID
-| ID BINARY NUMBER { add('C'); }
-| NUMBER { add('C'); } BINARY ID
-| TRUE { add('K'); }
-| FALSE { add('K'); }
-;
-
-return: RETURN { add('K'); } NUMBER { add('C'); } ';'
-| RETURN { add('K'); } ID ';'
+return: RETURN { add('K'); } value
 |
 ;
 
@@ -121,7 +114,7 @@ int main() {
 int search(char *type) {
 	int i;
 	for(i=count-1; i>=0; i--) {
-		if(strcmp(symbolTable[i].id_name,type)==0) {
+		if(strcmp(symbolTable[i].id_name, type)==0) {
 			return -1;
 			break;
 		}
@@ -135,28 +128,28 @@ void add(char c) {
 		if(c=='H') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
+			symbolTable[count].line_no=countn;
 			symbolTable[count].type=strdup("Header");
 			count++;
 		}
 		else if(c =='K') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup("N/A");
-			symbolTable[count].line_no = countn;
+			symbolTable[count].line_no=countn;
 			symbolTable[count].type=strdup("Keyword");
 			count++;
 		}
 		else if(c=='V') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
+			symbolTable[count].line_no=countn;
 			symbolTable[count].type=strdup("Variable");
 			count++;
 		}
 		else if(c=='C') {
 			symbolTable[count].id_name=strdup(yytext);
-			symbolTable[count].data_type=strdup(type);
-			symbolTable[count].line_no = countn;
+			symbolTable[count].data_type=strdup("CONST");
+			symbolTable[count].line_no=countn;
 			symbolTable[count].type=strdup("Constant");
 			count++;
 		}
@@ -164,7 +157,7 @@ void add(char c) {
 }
 
 void insert_type() {
-	strcpy(type,yytext);
+	strcpy(type, yytext);
 }
 
 void yyerror(const char* msg) {
