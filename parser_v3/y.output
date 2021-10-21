@@ -1,5 +1,6 @@
-State 19 conflicts: 1 reduce/reduce
-State 26 conflicts: 6 shift/reduce
+State 6 conflicts: 1 shift/reduce
+State 18 conflicts: 1 reduce/reduce
+State 25 conflicts: 6 shift/reduce
 
 
 Grammar
@@ -8,129 +9,127 @@ Grammar
 
     1 program: headers main '(' ')' '{' body return '}'
 
-    2 @1: /* empty */
+    2 headers: headers headers
+    3        | INCLUDE
 
-    3 headers: INCLUDE @1 headers
-    4        | INCLUDE
+    4 @1: /* empty */
 
-    5 @2: /* empty */
+    5 main: DATATYPE @1 ID
 
-    6 main: DATATYPE @2 ID
+    6 body: expressions
+    7     | loops
+    8     | conditionals
+    9     | expressions body
+   10     | loops body
+   11     | conditionals body
 
-    7 body: expressions
-    8     | loops
-    9     | conditionals
-   10     | expressions body
-   11     | loops body
-   12     | conditionals body
+   12 @2: /* empty */
 
-   13 @3: /* empty */
+   13 loops: FOR @2 '(' statement statement statement ')' '{' body '}'
 
-   14 loops: FOR @3 '(' statement statement statement ')' '{' body '}'
+   14 expressions: statement expressions
+   15            | statement
 
-   15 expressions: statement expressions
-   16            | statement
+   16 @3: /* empty */
 
-   17 @4: /* empty */
+   17 conditionals: IF @3 '(' condition ')' '{' expressions '}' else
 
-   18 conditionals: IF @4 '(' condition ')' '{' expressions '}' else
+   18 @4: /* empty */
 
-   19 @5: /* empty */
+   19 else: ELSE @4 '{' expressions '}'
+   20     | /* empty */
 
-   20 else: ELSE @5 '{' expressions '}'
-   21     | /* empty */
+   21 @5: /* empty */
 
    22 @6: /* empty */
 
-   23 @7: /* empty */
+   23 statement: DATATYPE @5 ID @6 ';'
 
-   24 statement: DATATYPE @6 ID @7 ';'
+   24 @7: /* empty */
 
-   25 @8: /* empty */
+   25 statement: DATATYPE @7 variable
+   26          | ID BINARY statement
+   27          | ID UNARY ';'
+   28          | UNARY ID ';'
+   29          | ID ';'
 
-   26 statement: DATATYPE @8 variable
-   27          | ID BINARY statement
-   28          | ID UNARY ';'
-   29          | UNARY ID ';'
-   30          | ID ';'
+   30 @8: /* empty */
 
-   31 @9: /* empty */
+   31 statement: NUMBER @8 ';'
+   32          | PRINTFF '(' STRLT ')' ';'
+   33          | SCANFF '(' STRLT ',' '&' ID ')' ';'
 
-   32 statement: NUMBER @9 ';'
-   33          | PRINTFF '(' STRLT ')' ';'
-   34          | SCANFF '(' STRLT ',' '&' ID ')' ';'
+   34 variable: ID array
+   35         | '*' variable
 
-   35 variable: ID array
-   36         | '*' variable
+   36 @9: /* empty */
 
    37 @10: /* empty */
 
-   38 @11: /* empty */
+   38 variable: ID @9 '=' NUMBER @10 ';'
+   39         | ',' variable
 
-   39 variable: ID @10 '=' NUMBER @11 ';'
-   40         | ',' variable
+   40 @11: /* empty */
 
-   41 @12: /* empty */
+   41 array: '[' NUMBER @11 ']' array
+   42      | '[' ID ']' array
+   43      | '[' ']' array
+   44      | ';'
 
-   42 array: '[' NUMBER @12 ']' array
-   43      | '[' ID ']' array
-   44      | '[' ']' array
-   45      | ';'
+   45 condition: condition BINARY boolean
+   46          | boolean
 
-   46 condition: condition BINARY boolean
-   47          | boolean
+   47 boolean: ID BINARY ID
+   48        | ID BINARY NUMBER
 
-   48 boolean: ID BINARY ID
-   49        | ID BINARY NUMBER
+   49 @12: /* empty */
 
-   50 @13: /* empty */
+   50 boolean: NUMBER @12 BINARY ID
+   51        | TRUE
+   52        | FALSE
 
-   51 boolean: NUMBER @13 BINARY ID
-   52        | TRUE
-   53        | FALSE
+   53 @13: /* empty */
 
    54 @14: /* empty */
 
-   55 @15: /* empty */
+   55 return: RETURN @13 NUMBER @14 ';'
 
-   56 return: RETURN @14 NUMBER @15 ';'
+   56 @15: /* empty */
 
-   57 @16: /* empty */
-
-   58 return: RETURN @16 ID ';'
-   59       | /* empty */
+   57 return: RETURN @15 ID ';'
+   58       | /* empty */
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'&' (38) 34
-'(' (40) 1 14 18 33 34
-')' (41) 1 14 18 33 34
-'*' (42) 36
-',' (44) 34 40
-';' (59) 24 28 29 30 32 33 34 39 45 56 58
-'=' (61) 39
-'[' (91) 42 43 44
-']' (93) 42 43 44
-'{' (123) 1 14 18 20
-'}' (125) 1 14 18 20
+'&' (38) 33
+'(' (40) 1 13 17 32 33
+')' (41) 1 13 17 32 33
+'*' (42) 35
+',' (44) 33 39
+';' (59) 23 27 28 29 31 32 33 38 44 55 57
+'=' (61) 38
+'[' (91) 41 42 43
+']' (93) 41 42 43
+'{' (123) 1 13 17 19
+'}' (125) 1 13 17 19
 error (256)
-INCLUDE (258) 3 4
-FOR (259) 14
-IF (260) 18
-ELSE (261) 20
-ID (262) 6 24 27 28 29 30 34 35 39 43 48 49 51 58
-NUMBER (263) 32 39 42 49 51 56
-UNARY (264) 28 29
-BINARY (265) 27 46 48 49 51
-DATATYPE (266) 6 24 26
-TRUE (267) 52
-FALSE (268) 53
-RETURN (269) 56 58
-PRINTFF (270) 33
-SCANFF (271) 34
-STRLT (272) 33 34
+INCLUDE (258) 3
+FOR (259) 13
+IF (260) 17
+ELSE (261) 19
+ID (262) 5 23 26 27 28 29 33 34 38 42 47 48 50 57
+NUMBER (263) 31 38 41 48 50 55
+UNARY (264) 27 28
+BINARY (265) 26 45 47 48 50
+DATATYPE (266) 5 23 25
+TRUE (267) 51
+FALSE (268) 52
+RETURN (269) 55 57
+PRINTFF (270) 32
+SCANFF (271) 33
+STRLT (272) 32 33
 
 
 Nonterminals, with rules where they appear
@@ -140,63 +139,61 @@ $accept (29)
 program (30)
     on left: 1, on right: 0
 headers (31)
-    on left: 3 4, on right: 1 3
-@1 (32)
-    on left: 2, on right: 3
-main (33)
-    on left: 6, on right: 1
-@2 (34)
-    on left: 5, on right: 6
-body (35)
-    on left: 7 8 9 10 11 12, on right: 1 10 11 12 14
-loops (36)
-    on left: 14, on right: 8 11
-@3 (37)
-    on left: 13, on right: 14
-expressions (38)
-    on left: 15 16, on right: 7 10 15 18 20
-conditionals (39)
-    on left: 18, on right: 9 12
-@4 (40)
-    on left: 17, on right: 18
-else (41)
-    on left: 20 21, on right: 18
-@5 (42)
-    on left: 19, on right: 20
-statement (43)
-    on left: 24 26 27 28 29 30 32 33 34, on right: 14 15 16 27
+    on left: 2 3, on right: 1 2
+main (32)
+    on left: 5, on right: 1
+@1 (33)
+    on left: 4, on right: 5
+body (34)
+    on left: 6 7 8 9 10 11, on right: 1 9 10 11 13
+loops (35)
+    on left: 13, on right: 7 10
+@2 (36)
+    on left: 12, on right: 13
+expressions (37)
+    on left: 14 15, on right: 6 9 14 17 19
+conditionals (38)
+    on left: 17, on right: 8 11
+@3 (39)
+    on left: 16, on right: 17
+else (40)
+    on left: 19 20, on right: 17
+@4 (41)
+    on left: 18, on right: 19
+statement (42)
+    on left: 23 25 26 27 28 29 31 32 33, on right: 13 14 15 26
+@5 (43)
+    on left: 21, on right: 23
 @6 (44)
-    on left: 22, on right: 24
+    on left: 22, on right: 23
 @7 (45)
-    on left: 23, on right: 24
+    on left: 24, on right: 25
 @8 (46)
-    on left: 25, on right: 26
-@9 (47)
-    on left: 31, on right: 32
-variable (48)
-    on left: 35 36 39 40, on right: 26 36 40
+    on left: 30, on right: 31
+variable (47)
+    on left: 34 35 38 39, on right: 25 35 39
+@9 (48)
+    on left: 36, on right: 38
 @10 (49)
-    on left: 37, on right: 39
-@11 (50)
-    on left: 38, on right: 39
-array (51)
-    on left: 42 43 44 45, on right: 35 42 43 44
-@12 (52)
-    on left: 41, on right: 42
-condition (53)
-    on left: 46 47, on right: 18 46
-boolean (54)
-    on left: 48 49 51 52 53, on right: 46 47
-@13 (55)
-    on left: 50, on right: 51
-return (56)
-    on left: 56 58 59, on right: 1
+    on left: 37, on right: 38
+array (50)
+    on left: 41 42 43 44, on right: 34 41 42 43
+@11 (51)
+    on left: 40, on right: 41
+condition (52)
+    on left: 45 46, on right: 17 45
+boolean (53)
+    on left: 47 48 50 51 52, on right: 45 46
+@12 (54)
+    on left: 49, on right: 50
+return (55)
+    on left: 55 57 58, on right: 1
+@13 (56)
+    on left: 53, on right: 55
 @14 (57)
-    on left: 54, on right: 56
+    on left: 54, on right: 55
 @15 (58)
-    on left: 55, on right: 56
-@16 (59)
-    on left: 57, on right: 58
+    on left: 56, on right: 57
 
 
 state 0
@@ -211,1094 +208,1090 @@ state 0
 
 state 1
 
-    3 headers: INCLUDE . @1 headers
-    4        | INCLUDE .
+    3 headers: INCLUDE .
 
-    DATATYPE  reduce using rule 4 (headers)
-    $default  reduce using rule 2 (@1)
-
-    @1  go to state 4
+    $default  reduce using rule 3 (headers)
 
 
 state 2
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 5
+    $end  shift, and go to state 4
 
 
 state 3
 
     1 program: headers . main '(' ')' '{' body return '}'
+    2 headers: headers . headers
 
-    DATATYPE  shift, and go to state 6
+    INCLUDE   shift, and go to state 1
+    DATATYPE  shift, and go to state 5
 
-    main  go to state 7
+    headers  go to state 6
+    main     go to state 7
 
 
 state 4
-
-    3 headers: INCLUDE @1 . headers
-
-    INCLUDE  shift, and go to state 1
-
-    headers  go to state 8
-
-
-state 5
 
     0 $accept: program $end .
 
     $default  accept
 
 
+state 5
+
+    5 main: DATATYPE . @1 ID
+
+    $default  reduce using rule 4 (@1)
+
+    @1  go to state 8
+
+
 state 6
 
-    6 main: DATATYPE . @2 ID
+    2 headers: headers . headers
+    2        | headers headers .
 
-    $default  reduce using rule 5 (@2)
+    INCLUDE  shift, and go to state 1
 
-    @2  go to state 9
+    INCLUDE   [reduce using rule 2 (headers)]
+    $default  reduce using rule 2 (headers)
+
+    headers  go to state 6
 
 
 state 7
 
     1 program: headers main . '(' ')' '{' body return '}'
 
-    '('  shift, and go to state 10
+    '('  shift, and go to state 9
 
 
 state 8
 
-    3 headers: INCLUDE @1 headers .
+    5 main: DATATYPE @1 . ID
 
-    $default  reduce using rule 3 (headers)
+    ID  shift, and go to state 10
 
 
 state 9
 
-    6 main: DATATYPE @2 . ID
+    1 program: headers main '(' . ')' '{' body return '}'
 
-    ID  shift, and go to state 11
+    ')'  shift, and go to state 11
 
 
 state 10
 
-    1 program: headers main '(' . ')' '{' body return '}'
+    5 main: DATATYPE @1 ID .
 
-    ')'  shift, and go to state 12
+    $default  reduce using rule 5 (main)
 
 
 state 11
 
-    6 main: DATATYPE @2 ID .
+    1 program: headers main '(' ')' . '{' body return '}'
 
-    $default  reduce using rule 6 (main)
+    '{'  shift, and go to state 12
 
 
 state 12
 
-    1 program: headers main '(' ')' . '{' body return '}'
+    1 program: headers main '(' ')' '{' . body return '}'
 
-    '{'  shift, and go to state 13
+    FOR       shift, and go to state 13
+    IF        shift, and go to state 14
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    body          go to state 21
+    loops         go to state 22
+    expressions   go to state 23
+    conditionals  go to state 24
+    statement     go to state 25
 
 
 state 13
 
-    1 program: headers main '(' ')' '{' . body return '}'
+   13 loops: FOR . @2 '(' statement statement statement ')' '{' body '}'
 
-    FOR       shift, and go to state 14
-    IF        shift, and go to state 15
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
+    $default  reduce using rule 12 (@2)
 
-    body          go to state 22
-    loops         go to state 23
-    expressions   go to state 24
-    conditionals  go to state 25
-    statement     go to state 26
+    @2  go to state 26
 
 
 state 14
 
-   14 loops: FOR . @3 '(' statement statement statement ')' '{' body '}'
+   17 conditionals: IF . @3 '(' condition ')' '{' expressions '}' else
 
-    $default  reduce using rule 13 (@3)
+    $default  reduce using rule 16 (@3)
 
     @3  go to state 27
 
 
 state 15
 
-   18 conditionals: IF . @4 '(' condition ')' '{' expressions '}' else
+   26 statement: ID . BINARY statement
+   27          | ID . UNARY ';'
+   29          | ID . ';'
 
-    $default  reduce using rule 17 (@4)
-
-    @4  go to state 28
+    UNARY   shift, and go to state 28
+    BINARY  shift, and go to state 29
+    ';'     shift, and go to state 30
 
 
 state 16
 
-   27 statement: ID . BINARY statement
-   28          | ID . UNARY ';'
-   30          | ID . ';'
+   31 statement: NUMBER . @8 ';'
 
-    UNARY   shift, and go to state 29
-    BINARY  shift, and go to state 30
-    ';'     shift, and go to state 31
+    $default  reduce using rule 30 (@8)
+
+    @8  go to state 31
 
 
 state 17
 
-   32 statement: NUMBER . @9 ';'
+   28 statement: UNARY . ID ';'
 
-    $default  reduce using rule 31 (@9)
-
-    @9  go to state 32
+    ID  shift, and go to state 32
 
 
 state 18
 
-   29 statement: UNARY . ID ';'
+   23 statement: DATATYPE . @5 ID @6 ';'
+   25          | DATATYPE . @7 variable
 
-    ID  shift, and go to state 33
+    ID        reduce using rule 21 (@5)
+    ID        [reduce using rule 24 (@7)]
+    $default  reduce using rule 24 (@7)
+
+    @5  go to state 33
+    @7  go to state 34
 
 
 state 19
 
-   24 statement: DATATYPE . @6 ID @7 ';'
-   26          | DATATYPE . @8 variable
+   32 statement: PRINTFF . '(' STRLT ')' ';'
 
-    ID        reduce using rule 22 (@6)
-    ID        [reduce using rule 25 (@8)]
-    $default  reduce using rule 25 (@8)
-
-    @6  go to state 34
-    @8  go to state 35
+    '('  shift, and go to state 35
 
 
 state 20
 
-   33 statement: PRINTFF . '(' STRLT ')' ';'
+   33 statement: SCANFF . '(' STRLT ',' '&' ID ')' ';'
 
     '('  shift, and go to state 36
 
 
 state 21
 
-   34 statement: SCANFF . '(' STRLT ',' '&' ID ')' ';'
+    1 program: headers main '(' ')' '{' body . return '}'
 
-    '('  shift, and go to state 37
+    RETURN  shift, and go to state 37
+
+    $default  reduce using rule 58 (return)
+
+    return  go to state 38
 
 
 state 22
 
-    1 program: headers main '(' ')' '{' body . return '}'
+    7 body: loops .
+   10     | loops . body
 
-    RETURN  shift, and go to state 38
+    FOR       shift, and go to state 13
+    IF        shift, and go to state 14
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
 
-    $default  reduce using rule 59 (return)
+    $default  reduce using rule 7 (body)
 
-    return  go to state 39
+    body          go to state 39
+    loops         go to state 22
+    expressions   go to state 23
+    conditionals  go to state 24
+    statement     go to state 25
 
 
 state 23
 
-    8 body: loops .
-   11     | loops . body
+    6 body: expressions .
+    9     | expressions . body
 
-    FOR       shift, and go to state 14
-    IF        shift, and go to state 15
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
+    FOR       shift, and go to state 13
+    IF        shift, and go to state 14
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
 
-    $default  reduce using rule 8 (body)
+    $default  reduce using rule 6 (body)
 
     body          go to state 40
-    loops         go to state 23
-    expressions   go to state 24
-    conditionals  go to state 25
-    statement     go to state 26
+    loops         go to state 22
+    expressions   go to state 23
+    conditionals  go to state 24
+    statement     go to state 25
 
 
 state 24
 
-    7 body: expressions .
-   10     | expressions . body
+    8 body: conditionals .
+   11     | conditionals . body
 
-    FOR       shift, and go to state 14
-    IF        shift, and go to state 15
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
+    FOR       shift, and go to state 13
+    IF        shift, and go to state 14
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
 
-    $default  reduce using rule 7 (body)
+    $default  reduce using rule 8 (body)
 
     body          go to state 41
-    loops         go to state 23
-    expressions   go to state 24
-    conditionals  go to state 25
-    statement     go to state 26
+    loops         go to state 22
+    expressions   go to state 23
+    conditionals  go to state 24
+    statement     go to state 25
 
 
 state 25
 
-    9 body: conditionals .
-   12     | conditionals . body
+   14 expressions: statement . expressions
+   15            | statement .
 
-    FOR       shift, and go to state 14
-    IF        shift, and go to state 15
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
 
-    $default  reduce using rule 9 (body)
+    ID        [reduce using rule 15 (expressions)]
+    NUMBER    [reduce using rule 15 (expressions)]
+    UNARY     [reduce using rule 15 (expressions)]
+    DATATYPE  [reduce using rule 15 (expressions)]
+    PRINTFF   [reduce using rule 15 (expressions)]
+    SCANFF    [reduce using rule 15 (expressions)]
+    $default  reduce using rule 15 (expressions)
 
-    body          go to state 42
-    loops         go to state 23
-    expressions   go to state 24
-    conditionals  go to state 25
-    statement     go to state 26
+    expressions  go to state 42
+    statement    go to state 25
 
 
 state 26
 
-   15 expressions: statement . expressions
-   16            | statement .
+   13 loops: FOR @2 . '(' statement statement statement ')' '{' body '}'
 
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
-
-    ID        [reduce using rule 16 (expressions)]
-    NUMBER    [reduce using rule 16 (expressions)]
-    UNARY     [reduce using rule 16 (expressions)]
-    DATATYPE  [reduce using rule 16 (expressions)]
-    PRINTFF   [reduce using rule 16 (expressions)]
-    SCANFF    [reduce using rule 16 (expressions)]
-    $default  reduce using rule 16 (expressions)
-
-    expressions  go to state 43
-    statement    go to state 26
+    '('  shift, and go to state 43
 
 
 state 27
 
-   14 loops: FOR @3 . '(' statement statement statement ')' '{' body '}'
+   17 conditionals: IF @3 . '(' condition ')' '{' expressions '}' else
 
     '('  shift, and go to state 44
 
 
 state 28
 
-   18 conditionals: IF @4 . '(' condition ')' '{' expressions '}' else
+   27 statement: ID UNARY . ';'
 
-    '('  shift, and go to state 45
+    ';'  shift, and go to state 45
 
 
 state 29
 
-   28 statement: ID UNARY . ';'
+   26 statement: ID BINARY . statement
 
-    ';'  shift, and go to state 46
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    statement  go to state 46
 
 
 state 30
 
-   27 statement: ID BINARY . statement
+   29 statement: ID ';' .
 
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
-
-    statement  go to state 47
+    $default  reduce using rule 29 (statement)
 
 
 state 31
 
-   30 statement: ID ';' .
+   31 statement: NUMBER @8 . ';'
 
-    $default  reduce using rule 30 (statement)
+    ';'  shift, and go to state 47
 
 
 state 32
 
-   32 statement: NUMBER @9 . ';'
+   28 statement: UNARY ID . ';'
 
     ';'  shift, and go to state 48
 
 
 state 33
 
-   29 statement: UNARY ID . ';'
+   23 statement: DATATYPE @5 . ID @6 ';'
 
-    ';'  shift, and go to state 49
+    ID  shift, and go to state 49
 
 
 state 34
 
-   24 statement: DATATYPE @6 . ID @7 ';'
+   25 statement: DATATYPE @7 . variable
 
-    ID  shift, and go to state 50
+    ID   shift, and go to state 50
+    ','  shift, and go to state 51
+    '*'  shift, and go to state 52
+
+    variable  go to state 53
 
 
 state 35
 
-   26 statement: DATATYPE @8 . variable
+   32 statement: PRINTFF '(' . STRLT ')' ';'
 
-    ID   shift, and go to state 51
-    ','  shift, and go to state 52
-    '*'  shift, and go to state 53
-
-    variable  go to state 54
+    STRLT  shift, and go to state 54
 
 
 state 36
 
-   33 statement: PRINTFF '(' . STRLT ')' ';'
+   33 statement: SCANFF '(' . STRLT ',' '&' ID ')' ';'
 
     STRLT  shift, and go to state 55
 
 
 state 37
 
-   34 statement: SCANFF '(' . STRLT ',' '&' ID ')' ';'
+   55 return: RETURN . @13 NUMBER @14 ';'
+   57       | RETURN . @15 ID ';'
 
-    STRLT  shift, and go to state 56
+    ID        reduce using rule 56 (@15)
+    $default  reduce using rule 53 (@13)
+
+    @13  go to state 56
+    @15  go to state 57
 
 
 state 38
 
-   56 return: RETURN . @14 NUMBER @15 ';'
-   58       | RETURN . @16 ID ';'
+    1 program: headers main '(' ')' '{' body return . '}'
 
-    ID        reduce using rule 57 (@16)
-    $default  reduce using rule 54 (@14)
-
-    @14  go to state 57
-    @16  go to state 58
+    '}'  shift, and go to state 58
 
 
 state 39
 
-    1 program: headers main '(' ')' '{' body return . '}'
-
-    '}'  shift, and go to state 59
-
-
-state 40
-
-   11 body: loops body .
-
-    $default  reduce using rule 11 (body)
-
-
-state 41
-
-   10 body: expressions body .
+   10 body: loops body .
 
     $default  reduce using rule 10 (body)
 
 
+state 40
+
+    9 body: expressions body .
+
+    $default  reduce using rule 9 (body)
+
+
+state 41
+
+   11 body: conditionals body .
+
+    $default  reduce using rule 11 (body)
+
+
 state 42
 
-   12 body: conditionals body .
+   14 expressions: statement expressions .
 
-    $default  reduce using rule 12 (body)
+    $default  reduce using rule 14 (expressions)
 
 
 state 43
 
-   15 expressions: statement expressions .
+   13 loops: FOR @2 '(' . statement statement statement ')' '{' body '}'
 
-    $default  reduce using rule 15 (expressions)
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    statement  go to state 59
 
 
 state 44
 
-   14 loops: FOR @3 '(' . statement statement statement ')' '{' body '}'
+   17 conditionals: IF @3 '(' . condition ')' '{' expressions '}' else
 
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
+    ID      shift, and go to state 60
+    NUMBER  shift, and go to state 61
+    TRUE    shift, and go to state 62
+    FALSE   shift, and go to state 63
 
-    statement  go to state 60
+    condition  go to state 64
+    boolean    go to state 65
 
 
 state 45
 
-   18 conditionals: IF @4 '(' . condition ')' '{' expressions '}' else
-
-    ID      shift, and go to state 61
-    NUMBER  shift, and go to state 62
-    TRUE    shift, and go to state 63
-    FALSE   shift, and go to state 64
-
-    condition  go to state 65
-    boolean    go to state 66
-
-
-state 46
-
-   28 statement: ID UNARY ';' .
-
-    $default  reduce using rule 28 (statement)
-
-
-state 47
-
-   27 statement: ID BINARY statement .
+   27 statement: ID UNARY ';' .
 
     $default  reduce using rule 27 (statement)
 
 
+state 46
+
+   26 statement: ID BINARY statement .
+
+    $default  reduce using rule 26 (statement)
+
+
+state 47
+
+   31 statement: NUMBER @8 ';' .
+
+    $default  reduce using rule 31 (statement)
+
+
 state 48
 
-   32 statement: NUMBER @9 ';' .
+   28 statement: UNARY ID ';' .
 
-    $default  reduce using rule 32 (statement)
+    $default  reduce using rule 28 (statement)
 
 
 state 49
 
-   29 statement: UNARY ID ';' .
+   23 statement: DATATYPE @5 ID . @6 ';'
 
-    $default  reduce using rule 29 (statement)
+    $default  reduce using rule 22 (@6)
+
+    @6  go to state 66
 
 
 state 50
 
-   24 statement: DATATYPE @6 ID . @7 ';'
+   34 variable: ID . array
+   38         | ID . @9 '=' NUMBER @10 ';'
 
-    $default  reduce using rule 23 (@7)
+    ';'  shift, and go to state 67
+    '['  shift, and go to state 68
 
-    @7  go to state 67
+    $default  reduce using rule 36 (@9)
+
+    @9     go to state 69
+    array  go to state 70
 
 
 state 51
 
-   35 variable: ID . array
-   39         | ID . @10 '=' NUMBER @11 ';'
+   39 variable: ',' . variable
 
-    ';'  shift, and go to state 68
-    '['  shift, and go to state 69
+    ID   shift, and go to state 50
+    ','  shift, and go to state 51
+    '*'  shift, and go to state 52
 
-    $default  reduce using rule 37 (@10)
-
-    @10    go to state 70
-    array  go to state 71
+    variable  go to state 71
 
 
 state 52
 
-   40 variable: ',' . variable
+   35 variable: '*' . variable
 
-    ID   shift, and go to state 51
-    ','  shift, and go to state 52
-    '*'  shift, and go to state 53
+    ID   shift, and go to state 50
+    ','  shift, and go to state 51
+    '*'  shift, and go to state 52
 
     variable  go to state 72
 
 
 state 53
 
-   36 variable: '*' . variable
+   25 statement: DATATYPE @7 variable .
 
-    ID   shift, and go to state 51
-    ','  shift, and go to state 52
-    '*'  shift, and go to state 53
-
-    variable  go to state 73
+    $default  reduce using rule 25 (statement)
 
 
 state 54
 
-   26 statement: DATATYPE @8 variable .
+   32 statement: PRINTFF '(' STRLT . ')' ';'
 
-    $default  reduce using rule 26 (statement)
+    ')'  shift, and go to state 73
 
 
 state 55
 
-   33 statement: PRINTFF '(' STRLT . ')' ';'
+   33 statement: SCANFF '(' STRLT . ',' '&' ID ')' ';'
 
-    ')'  shift, and go to state 74
+    ','  shift, and go to state 74
 
 
 state 56
 
-   34 statement: SCANFF '(' STRLT . ',' '&' ID ')' ';'
+   55 return: RETURN @13 . NUMBER @14 ';'
 
-    ','  shift, and go to state 75
+    NUMBER  shift, and go to state 75
 
 
 state 57
 
-   56 return: RETURN @14 . NUMBER @15 ';'
+   57 return: RETURN @15 . ID ';'
 
-    NUMBER  shift, and go to state 76
+    ID  shift, and go to state 76
 
 
 state 58
-
-   58 return: RETURN @16 . ID ';'
-
-    ID  shift, and go to state 77
-
-
-state 59
 
     1 program: headers main '(' ')' '{' body return '}' .
 
     $default  reduce using rule 1 (program)
 
 
+state 59
+
+   13 loops: FOR @2 '(' statement . statement statement ')' '{' body '}'
+
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    statement  go to state 77
+
+
 state 60
 
-   14 loops: FOR @3 '(' statement . statement statement ')' '{' body '}'
+   47 boolean: ID . BINARY ID
+   48        | ID . BINARY NUMBER
 
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
-
-    statement  go to state 78
+    BINARY  shift, and go to state 78
 
 
 state 61
 
-   48 boolean: ID . BINARY ID
-   49        | ID . BINARY NUMBER
+   50 boolean: NUMBER . @12 BINARY ID
 
-    BINARY  shift, and go to state 79
+    $default  reduce using rule 49 (@12)
+
+    @12  go to state 79
 
 
 state 62
 
-   51 boolean: NUMBER . @13 BINARY ID
+   51 boolean: TRUE .
 
-    $default  reduce using rule 50 (@13)
-
-    @13  go to state 80
+    $default  reduce using rule 51 (boolean)
 
 
 state 63
 
-   52 boolean: TRUE .
+   52 boolean: FALSE .
 
     $default  reduce using rule 52 (boolean)
 
 
 state 64
 
-   53 boolean: FALSE .
+   17 conditionals: IF @3 '(' condition . ')' '{' expressions '}' else
+   45 condition: condition . BINARY boolean
 
-    $default  reduce using rule 53 (boolean)
+    BINARY  shift, and go to state 80
+    ')'     shift, and go to state 81
 
 
 state 65
 
-   18 conditionals: IF @4 '(' condition . ')' '{' expressions '}' else
-   46 condition: condition . BINARY boolean
+   46 condition: boolean .
 
-    BINARY  shift, and go to state 81
-    ')'     shift, and go to state 82
+    $default  reduce using rule 46 (condition)
 
 
 state 66
 
-   47 condition: boolean .
+   23 statement: DATATYPE @5 ID @6 . ';'
 
-    $default  reduce using rule 47 (condition)
+    ';'  shift, and go to state 82
 
 
 state 67
 
-   24 statement: DATATYPE @6 ID @7 . ';'
+   44 array: ';' .
 
-    ';'  shift, and go to state 83
+    $default  reduce using rule 44 (array)
 
 
 state 68
 
-   45 array: ';' .
+   41 array: '[' . NUMBER @11 ']' array
+   42      | '[' . ID ']' array
+   43      | '[' . ']' array
 
-    $default  reduce using rule 45 (array)
+    ID      shift, and go to state 83
+    NUMBER  shift, and go to state 84
+    ']'     shift, and go to state 85
 
 
 state 69
 
-   42 array: '[' . NUMBER @12 ']' array
-   43      | '[' . ID ']' array
-   44      | '[' . ']' array
+   38 variable: ID @9 . '=' NUMBER @10 ';'
 
-    ID      shift, and go to state 84
-    NUMBER  shift, and go to state 85
-    ']'     shift, and go to state 86
+    '='  shift, and go to state 86
 
 
 state 70
 
-   39 variable: ID @10 . '=' NUMBER @11 ';'
+   34 variable: ID array .
 
-    '='  shift, and go to state 87
+    $default  reduce using rule 34 (variable)
 
 
 state 71
 
-   35 variable: ID array .
+   39 variable: ',' variable .
 
-    $default  reduce using rule 35 (variable)
+    $default  reduce using rule 39 (variable)
 
 
 state 72
 
-   40 variable: ',' variable .
+   35 variable: '*' variable .
 
-    $default  reduce using rule 40 (variable)
+    $default  reduce using rule 35 (variable)
 
 
 state 73
 
-   36 variable: '*' variable .
+   32 statement: PRINTFF '(' STRLT ')' . ';'
 
-    $default  reduce using rule 36 (variable)
+    ';'  shift, and go to state 87
 
 
 state 74
 
-   33 statement: PRINTFF '(' STRLT ')' . ';'
+   33 statement: SCANFF '(' STRLT ',' . '&' ID ')' ';'
 
-    ';'  shift, and go to state 88
+    '&'  shift, and go to state 88
 
 
 state 75
 
-   34 statement: SCANFF '(' STRLT ',' . '&' ID ')' ';'
+   55 return: RETURN @13 NUMBER . @14 ';'
 
-    '&'  shift, and go to state 89
+    $default  reduce using rule 54 (@14)
+
+    @14  go to state 89
 
 
 state 76
 
-   56 return: RETURN @14 NUMBER . @15 ';'
+   57 return: RETURN @15 ID . ';'
 
-    $default  reduce using rule 55 (@15)
-
-    @15  go to state 90
+    ';'  shift, and go to state 90
 
 
 state 77
 
-   58 return: RETURN @16 ID . ';'
+   13 loops: FOR @2 '(' statement statement . statement ')' '{' body '}'
 
-    ';'  shift, and go to state 91
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    statement  go to state 91
 
 
 state 78
 
-   14 loops: FOR @3 '(' statement statement . statement ')' '{' body '}'
+   47 boolean: ID BINARY . ID
+   48        | ID BINARY . NUMBER
 
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
-
-    statement  go to state 92
+    ID      shift, and go to state 92
+    NUMBER  shift, and go to state 93
 
 
 state 79
 
-   48 boolean: ID BINARY . ID
-   49        | ID BINARY . NUMBER
+   50 boolean: NUMBER @12 . BINARY ID
 
-    ID      shift, and go to state 93
-    NUMBER  shift, and go to state 94
+    BINARY  shift, and go to state 94
 
 
 state 80
 
-   51 boolean: NUMBER @13 . BINARY ID
+   45 condition: condition BINARY . boolean
 
-    BINARY  shift, and go to state 95
+    ID      shift, and go to state 60
+    NUMBER  shift, and go to state 61
+    TRUE    shift, and go to state 62
+    FALSE   shift, and go to state 63
+
+    boolean  go to state 95
 
 
 state 81
 
-   46 condition: condition BINARY . boolean
+   17 conditionals: IF @3 '(' condition ')' . '{' expressions '}' else
 
-    ID      shift, and go to state 61
-    NUMBER  shift, and go to state 62
-    TRUE    shift, and go to state 63
-    FALSE   shift, and go to state 64
-
-    boolean  go to state 96
+    '{'  shift, and go to state 96
 
 
 state 82
 
-   18 conditionals: IF @4 '(' condition ')' . '{' expressions '}' else
+   23 statement: DATATYPE @5 ID @6 ';' .
 
-    '{'  shift, and go to state 97
+    $default  reduce using rule 23 (statement)
 
 
 state 83
 
-   24 statement: DATATYPE @6 ID @7 ';' .
+   42 array: '[' ID . ']' array
 
-    $default  reduce using rule 24 (statement)
+    ']'  shift, and go to state 97
 
 
 state 84
 
-   43 array: '[' ID . ']' array
+   41 array: '[' NUMBER . @11 ']' array
 
-    ']'  shift, and go to state 98
+    $default  reduce using rule 40 (@11)
+
+    @11  go to state 98
 
 
 state 85
 
-   42 array: '[' NUMBER . @12 ']' array
+   43 array: '[' ']' . array
 
-    $default  reduce using rule 41 (@12)
+    ';'  shift, and go to state 67
+    '['  shift, and go to state 68
 
-    @12  go to state 99
+    array  go to state 99
 
 
 state 86
 
-   44 array: '[' ']' . array
+   38 variable: ID @9 '=' . NUMBER @10 ';'
 
-    ';'  shift, and go to state 68
-    '['  shift, and go to state 69
-
-    array  go to state 100
+    NUMBER  shift, and go to state 100
 
 
 state 87
 
-   39 variable: ID @10 '=' . NUMBER @11 ';'
+   32 statement: PRINTFF '(' STRLT ')' ';' .
 
-    NUMBER  shift, and go to state 101
+    $default  reduce using rule 32 (statement)
 
 
 state 88
 
-   33 statement: PRINTFF '(' STRLT ')' ';' .
+   33 statement: SCANFF '(' STRLT ',' '&' . ID ')' ';'
 
-    $default  reduce using rule 33 (statement)
+    ID  shift, and go to state 101
 
 
 state 89
 
-   34 statement: SCANFF '(' STRLT ',' '&' . ID ')' ';'
+   55 return: RETURN @13 NUMBER @14 . ';'
 
-    ID  shift, and go to state 102
+    ';'  shift, and go to state 102
 
 
 state 90
 
-   56 return: RETURN @14 NUMBER @15 . ';'
+   57 return: RETURN @15 ID ';' .
 
-    ';'  shift, and go to state 103
+    $default  reduce using rule 57 (return)
 
 
 state 91
 
-   58 return: RETURN @16 ID ';' .
+   13 loops: FOR @2 '(' statement statement statement . ')' '{' body '}'
 
-    $default  reduce using rule 58 (return)
+    ')'  shift, and go to state 103
 
 
 state 92
 
-   14 loops: FOR @3 '(' statement statement statement . ')' '{' body '}'
+   47 boolean: ID BINARY ID .
 
-    ')'  shift, and go to state 104
+    $default  reduce using rule 47 (boolean)
 
 
 state 93
 
-   48 boolean: ID BINARY ID .
+   48 boolean: ID BINARY NUMBER .
 
     $default  reduce using rule 48 (boolean)
 
 
 state 94
 
-   49 boolean: ID BINARY NUMBER .
+   50 boolean: NUMBER @12 BINARY . ID
 
-    $default  reduce using rule 49 (boolean)
+    ID  shift, and go to state 104
 
 
 state 95
 
-   51 boolean: NUMBER @13 BINARY . ID
+   45 condition: condition BINARY boolean .
 
-    ID  shift, and go to state 105
+    $default  reduce using rule 45 (condition)
 
 
 state 96
 
-   46 condition: condition BINARY boolean .
+   17 conditionals: IF @3 '(' condition ')' '{' . expressions '}' else
 
-    $default  reduce using rule 46 (condition)
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    expressions  go to state 105
+    statement    go to state 25
 
 
 state 97
 
-   18 conditionals: IF @4 '(' condition ')' '{' . expressions '}' else
+   42 array: '[' ID ']' . array
 
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
+    ';'  shift, and go to state 67
+    '['  shift, and go to state 68
 
-    expressions  go to state 106
-    statement    go to state 26
+    array  go to state 106
 
 
 state 98
 
-   43 array: '[' ID ']' . array
+   41 array: '[' NUMBER @11 . ']' array
 
-    ';'  shift, and go to state 68
-    '['  shift, and go to state 69
-
-    array  go to state 107
+    ']'  shift, and go to state 107
 
 
 state 99
 
-   42 array: '[' NUMBER @12 . ']' array
-
-    ']'  shift, and go to state 108
-
-
-state 100
-
-   44 array: '[' ']' array .
-
-    $default  reduce using rule 44 (array)
-
-
-state 101
-
-   39 variable: ID @10 '=' NUMBER . @11 ';'
-
-    $default  reduce using rule 38 (@11)
-
-    @11  go to state 109
-
-
-state 102
-
-   34 statement: SCANFF '(' STRLT ',' '&' ID . ')' ';'
-
-    ')'  shift, and go to state 110
-
-
-state 103
-
-   56 return: RETURN @14 NUMBER @15 ';' .
-
-    $default  reduce using rule 56 (return)
-
-
-state 104
-
-   14 loops: FOR @3 '(' statement statement statement ')' . '{' body '}'
-
-    '{'  shift, and go to state 111
-
-
-state 105
-
-   51 boolean: NUMBER @13 BINARY ID .
-
-    $default  reduce using rule 51 (boolean)
-
-
-state 106
-
-   18 conditionals: IF @4 '(' condition ')' '{' expressions . '}' else
-
-    '}'  shift, and go to state 112
-
-
-state 107
-
-   43 array: '[' ID ']' array .
+   43 array: '[' ']' array .
 
     $default  reduce using rule 43 (array)
 
 
+state 100
+
+   38 variable: ID @9 '=' NUMBER . @10 ';'
+
+    $default  reduce using rule 37 (@10)
+
+    @10  go to state 108
+
+
+state 101
+
+   33 statement: SCANFF '(' STRLT ',' '&' ID . ')' ';'
+
+    ')'  shift, and go to state 109
+
+
+state 102
+
+   55 return: RETURN @13 NUMBER @14 ';' .
+
+    $default  reduce using rule 55 (return)
+
+
+state 103
+
+   13 loops: FOR @2 '(' statement statement statement ')' . '{' body '}'
+
+    '{'  shift, and go to state 110
+
+
+state 104
+
+   50 boolean: NUMBER @12 BINARY ID .
+
+    $default  reduce using rule 50 (boolean)
+
+
+state 105
+
+   17 conditionals: IF @3 '(' condition ')' '{' expressions . '}' else
+
+    '}'  shift, and go to state 111
+
+
+state 106
+
+   42 array: '[' ID ']' array .
+
+    $default  reduce using rule 42 (array)
+
+
+state 107
+
+   41 array: '[' NUMBER @11 ']' . array
+
+    ';'  shift, and go to state 67
+    '['  shift, and go to state 68
+
+    array  go to state 112
+
+
 state 108
 
-   42 array: '[' NUMBER @12 ']' . array
+   38 variable: ID @9 '=' NUMBER @10 . ';'
 
-    ';'  shift, and go to state 68
-    '['  shift, and go to state 69
-
-    array  go to state 113
+    ';'  shift, and go to state 113
 
 
 state 109
 
-   39 variable: ID @10 '=' NUMBER @11 . ';'
+   33 statement: SCANFF '(' STRLT ',' '&' ID ')' . ';'
 
     ';'  shift, and go to state 114
 
 
 state 110
 
-   34 statement: SCANFF '(' STRLT ',' '&' ID ')' . ';'
+   13 loops: FOR @2 '(' statement statement statement ')' '{' . body '}'
 
-    ';'  shift, and go to state 115
+    FOR       shift, and go to state 13
+    IF        shift, and go to state 14
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    body          go to state 115
+    loops         go to state 22
+    expressions   go to state 23
+    conditionals  go to state 24
+    statement     go to state 25
 
 
 state 111
 
-   14 loops: FOR @3 '(' statement statement statement ')' '{' . body '}'
+   17 conditionals: IF @3 '(' condition ')' '{' expressions '}' . else
 
-    FOR       shift, and go to state 14
-    IF        shift, and go to state 15
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
+    ELSE  shift, and go to state 116
 
-    body          go to state 116
-    loops         go to state 23
-    expressions   go to state 24
-    conditionals  go to state 25
-    statement     go to state 26
+    $default  reduce using rule 20 (else)
+
+    else  go to state 117
 
 
 state 112
 
-   18 conditionals: IF @4 '(' condition ')' '{' expressions '}' . else
+   41 array: '[' NUMBER @11 ']' array .
 
-    ELSE  shift, and go to state 117
-
-    $default  reduce using rule 21 (else)
-
-    else  go to state 118
+    $default  reduce using rule 41 (array)
 
 
 state 113
 
-   42 array: '[' NUMBER @12 ']' array .
+   38 variable: ID @9 '=' NUMBER @10 ';' .
 
-    $default  reduce using rule 42 (array)
+    $default  reduce using rule 38 (variable)
 
 
 state 114
 
-   39 variable: ID @10 '=' NUMBER @11 ';' .
+   33 statement: SCANFF '(' STRLT ',' '&' ID ')' ';' .
 
-    $default  reduce using rule 39 (variable)
+    $default  reduce using rule 33 (statement)
 
 
 state 115
 
-   34 statement: SCANFF '(' STRLT ',' '&' ID ')' ';' .
+   13 loops: FOR @2 '(' statement statement statement ')' '{' body . '}'
 
-    $default  reduce using rule 34 (statement)
+    '}'  shift, and go to state 118
 
 
 state 116
 
-   14 loops: FOR @3 '(' statement statement statement ')' '{' body . '}'
+   19 else: ELSE . @4 '{' expressions '}'
 
-    '}'  shift, and go to state 119
+    $default  reduce using rule 18 (@4)
+
+    @4  go to state 119
 
 
 state 117
 
-   20 else: ELSE . @5 '{' expressions '}'
+   17 conditionals: IF @3 '(' condition ')' '{' expressions '}' else .
 
-    $default  reduce using rule 19 (@5)
-
-    @5  go to state 120
+    $default  reduce using rule 17 (conditionals)
 
 
 state 118
 
-   18 conditionals: IF @4 '(' condition ')' '{' expressions '}' else .
+   13 loops: FOR @2 '(' statement statement statement ')' '{' body '}' .
 
-    $default  reduce using rule 18 (conditionals)
+    $default  reduce using rule 13 (loops)
 
 
 state 119
 
-   14 loops: FOR @3 '(' statement statement statement ')' '{' body '}' .
+   19 else: ELSE @4 . '{' expressions '}'
 
-    $default  reduce using rule 14 (loops)
+    '{'  shift, and go to state 120
 
 
 state 120
 
-   20 else: ELSE @5 . '{' expressions '}'
+   19 else: ELSE @4 '{' . expressions '}'
 
-    '{'  shift, and go to state 121
+    ID        shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    UNARY     shift, and go to state 17
+    DATATYPE  shift, and go to state 18
+    PRINTFF   shift, and go to state 19
+    SCANFF    shift, and go to state 20
+
+    expressions  go to state 121
+    statement    go to state 25
 
 
 state 121
 
-   20 else: ELSE @5 '{' . expressions '}'
+   19 else: ELSE @4 '{' expressions . '}'
 
-    ID        shift, and go to state 16
-    NUMBER    shift, and go to state 17
-    UNARY     shift, and go to state 18
-    DATATYPE  shift, and go to state 19
-    PRINTFF   shift, and go to state 20
-    SCANFF    shift, and go to state 21
-
-    expressions  go to state 122
-    statement    go to state 26
+    '}'  shift, and go to state 122
 
 
 state 122
 
-   20 else: ELSE @5 '{' expressions . '}'
+   19 else: ELSE @4 '{' expressions '}' .
 
-    '}'  shift, and go to state 123
-
-
-state 123
-
-   20 else: ELSE @5 '{' expressions '}' .
-
-    $default  reduce using rule 20 (else)
+    $default  reduce using rule 19 (else)

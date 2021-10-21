@@ -32,7 +32,7 @@
 program: headers main '(' ')' '{' body return '}'
 ;
 
-headers: INCLUDE { add('H'); } headers
+headers: headers headers
 | INCLUDE { add('H'); }
 ;
 
