@@ -45,3 +45,24 @@ body
         loops
             statements
     statements
+
+
+PARSER_v3
+
+program
+    headers
+        INCLUDE headers
+        INCLUDE
+    main
+        DATATYPE ID
+    body 
+        expressions body
+        loops body 
+        conditionals body
+        expressions
+            statement expressions
+            statement
+                
+        loops
+        conditionals
+    return
