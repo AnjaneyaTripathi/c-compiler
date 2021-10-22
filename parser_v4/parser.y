@@ -22,14 +22,13 @@
     int q;
 	char type[10];
     extern int countn;
-
 %}
 
 %token PRINTFF SCANFF INT FLOAT CHAR VOID RETURN FOR INCLUDE TRUE FALSE NUMBER ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY
 
 %%
 
-program: headers main '(' ')' '{' body return ';' '}' 
+program: headers main '(' ')' '{' body return '}' 
 ;
 
 headers: headers headers
@@ -47,14 +46,13 @@ datatype: INT { insert_type(); }
 
 body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}'
 | statement ';'
-| assignment ';'
 | body body
 | PRINTFF { add('K'); } '(' STR ')' ';'
 | SCANFF { add('K'); } '(' STR ',' '&' ID ')' ';'
 ;
 
 statement: datatype ID { add('V'); } init
-| ID '=' value
+| ID '=' expression 
 | ID relop value
 | ID UNARY
 | UNARY ID
@@ -66,9 +64,6 @@ init: '=' value
 
 value: ID
 | NUMBER { add('C'); }
-;
-
-assignment: ID '=' expression 
 ;
 
 expression: expression arithmetic expression
@@ -89,7 +84,7 @@ relop: LT
 | NE
 ;
 
-return: RETURN { add('K'); } value
+return: RETURN { add('K'); } value ';'
 |
 ;
 
