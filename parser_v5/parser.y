@@ -38,13 +38,13 @@
 		struct node* nd;
 		} nam; 
 	} 
-%token VOID INCLUDE RETURN 
-%token <nam> PRINTFF SCANFF INT FLOAT CHAR FOR TRUE FALSE NUMBER ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY
+%token VOID 
+%token <nam> PRINTFF SCANFF INT FLOAT CHAR FOR TRUE FALSE NUMBER ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY INCLUDE RETURN 
 %type <nam> headers main body return datatype expression statement init value arithmetic relop program
 
 %%
 
-program: headers main '(' ')' '{' body return '}' { $$.nd = mknode(NULL, $6.nd, "program"); 
+program: headers main '(' ')' '{' body return '}' { $2.nd = mknode($6.nd, $7.nd, "main"); $$.nd = mknode($1.nd, $2.nd, "program"); 
 	printf("#######################################################################################\n"); 
 	printf("\t\t\tSyntax Tree in Inorder traversal\n#######################################################################################\n"); 
 	printtree($$.nd); 
@@ -52,8 +52,8 @@ program: headers main '(' ')' '{' body return '}' { $$.nd = mknode(NULL, $6.nd, 
 } 
 ;
 
-headers: headers headers
-| INCLUDE { add('H'); }
+headers: headers headers { $$.nd = mknode($1.nd, $2.nd, "headers"); }
+| INCLUDE { add('H'); } { $$.nd = mknode(NULL, NULL, $1.name); }
 ;
 
 main: datatype ID { add('K'); }
@@ -65,7 +65,7 @@ datatype: INT { insert_type(); }
 | VOID { insert_type(); }
 ;
 
-body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}'
+body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}' { struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); struct node *temp2 = mknode($4.nd, temp, "CONDITION"); $$.nd = mknode(temp2, $11.nd, $1.name); }
 | statement ';' { $$.nd = $1.nd; }
 | body body { $$.nd = mknode($1.nd, $2.nd, "statements"); }
 | PRINTFF { add('K'); } '(' STR ')' ';' { $$.nd = mknode(NULL, NULL, "printf"); }
@@ -73,10 +73,10 @@ body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '
 ;
 
 statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($2.nd, $4.nd, "declaration"); }
-| ID '=' expression
-| ID relop value
-| ID UNARY
-| UNARY ID
+| ID '=' expression { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); }
+| ID relop value { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, $2.name); }
+| ID UNARY { $1.nd = mknode(NULL, NULL, $1.name); $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($1.nd, $2.nd, "ITERATOR"); }
+| UNARY ID { $1.nd = mknode(NULL, NULL, $1.name); $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($1.nd, $2.nd, "ITERATOR"); }
 ;
 
 init: '=' value { $$.nd = $2.nd; }
@@ -87,12 +87,12 @@ value: ID { $$.nd = mknode(NULL, NULL, $1.name); }
 | NUMBER { add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
 ;
 
-expression: expression arithmetic expression
-| value
+expression: expression arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); }
+| value { $$.nd = $1.nd; }
 ;
 
-arithmetic: ADD
-| SUBTRACT
+arithmetic: ADD 
+| SUBTRACT 
 | MULTIPLY
 | DIVIDE
 ;
@@ -105,7 +105,7 @@ relop: LT
 | NE
 ;
 
-return: RETURN { add('K'); } value ';'
+return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "RETURN"); }
 | 
 ;
 
