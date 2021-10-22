@@ -44,7 +44,12 @@
 
 %%
 
-program: headers main '(' ')' '{' body return '}' { $$.nd = mknode(NULL, $6.nd, "program"); printtree($$.nd); } 
+program: headers main '(' ')' '{' body return '}' { $$.nd = mknode(NULL, $6.nd, "program"); 
+	printf("#######################################################################################\n"); 
+	printf("\t\t\tSyntax Tree in Inorder traversal\n#######################################################################################\n"); 
+	printtree($$.nd); 
+	printf("\n\n");
+} 
 ;
 
 headers: headers headers
@@ -75,7 +80,7 @@ statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name);
 ;
 
 init: '=' value { $$.nd = $2.nd; }
-| 
+| { $$.nd = mknode(NULL, NULL, "NULL"); }
 ;
 
 value: ID { $$.nd = mknode(NULL, NULL, $1.name); }
@@ -110,7 +115,7 @@ int main() {
     yyparse();
     printf("\t\t\tSymbol table\n");
 	printf("#######################################################################################\n");	
-	printf("\nsymbol \t identify \t line number\n");
+	printf("\nsymbol \t datatype \t type \t line number\n");
 	printf("_____________________________\n");
 	int i=0;
 	for(i=0; i<count; i++) {
