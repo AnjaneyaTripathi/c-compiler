@@ -115,7 +115,7 @@ int main() {
     yyparse();
     printf("\t\t\tSymbol table\n");
 	printf("#######################################################################################\n");	
-	printf("\n SYMBOL \t DATATYPE \t TYPE \t LINE NUMBER \n");
+	printf("\n SYMBOL   DATATYPE   TYPE   LINE NUMBER \n");
 	printf("_____________________________\n");
 	int i=0;
 	for(i=0; i<count; i++) {
