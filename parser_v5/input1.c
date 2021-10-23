@@ -16,6 +16,5 @@ int main() {
         for(int j=0; j<z; j++) {
             f=1;
         }
-    }
-    return 0;
+    } 
 }

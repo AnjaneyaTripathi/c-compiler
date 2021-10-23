@@ -83,10 +83,6 @@ init: '=' value { $$.nd = $2.nd; }
 | { $$.nd = mknode(NULL, NULL, "NULL"); }
 ;
 
-value: ID { $$.nd = mknode(NULL, NULL, $1.name); }
-| NUMBER { add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
-;
-
 expression: expression arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); }
 | value { $$.nd = $1.nd; }
 ;
@@ -105,8 +101,12 @@ relop: LT
 | NE
 ;
 
-return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "RETURN"); }
-| 
+value: NUMBER { add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
+| ID { $$.nd = mknode(NULL, NULL, $1.name); }
+;
+
+return: RETURN NUMBER ';' { $$.nd = mknode(NULL, NULL, "return"); }
+| { $$.nd = NULL; }
 ;
 
 %%
@@ -115,15 +115,11 @@ int main() {
     yyparse();
     printf("\t\t\tSymbol table\n");
 	printf("#######################################################################################\n");	
-	printf("\nsymbol \t datatype \t type \t line number\n");
+	printf("\n SYMBOL \t DATATYPE \t TYPE \t LINE NUMBER \n");
 	printf("_____________________________\n");
 	int i=0;
 	for(i=0; i<count; i++) {
 		printf("%s\t%s\t%s\t%d\t\n", symbolTable[i].id_name, symbolTable[i].data_type, symbolTable[i].type, symbolTable[i].line_no);
-	}
-	for(i=0; i<count; i++){
-		free(symbolTable[i].id_name);
-		free(symbolTable[i].type);
 	}
 }
 
@@ -148,11 +144,11 @@ void add(char c) {
 			symbolTable[count].type=strdup("Header");
 			count++;
 		}
-		else if(c =='K') {
+		else if(c=='K') {
 			symbolTable[count].id_name=strdup(yytext);
 			symbolTable[count].data_type=strdup("N/A");
 			symbolTable[count].line_no=countn;
-			symbolTable[count].type=strdup("Keyword");
+			symbolTable[count].type=strdup("Keyword\t");
 			count++;
 		}
 		else if(c=='V') {
@@ -187,7 +183,7 @@ void printtree(struct node* tree) {
 	if (tree->left) {
 		printtree(tree->left);
 	}
-	printf(" %s , ", tree->token);
+	printf("%s, ", tree->token);
 	if (tree->right) {
 		printtree(tree->right);
 	}

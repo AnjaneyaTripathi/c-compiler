@@ -17,5 +17,5 @@ int main() {
             f=1;
         }
     }
-    return 7
+    return 0;
 }
