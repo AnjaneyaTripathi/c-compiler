@@ -63,30 +63,25 @@ datatype
     VOID
 body
     FOR ( statement ; statement ; statement ) { body }
-    assignment
-    defintion
+    statement ;
     body body
     PRINTFF ( STRLT ) ;
     SCANFF ( STRLT , & ID ) ;
 statement
-    datatype ID = NUMBER
-    datatype ID = ID
-    ID = NUMBER
-    ID = ID
-    ID relop NUMBER
-    ID relop ID
-    ID unary
-    unary ID
-defintion
-    datatype ID ;
-    datatype ID = ID ;
-    datatype ID = NUMBER ;
-assignment  
-    ID = expression ;
-expression
-    expression arithmetic expression
+    datatype ID init
+    ID = expression
+    ID relop value
+    ID UNARY
+    UNARY ID
+init
+    = value
+    nothing
+value
     ID
     NUMBER
+expression
+    expression arithmetic expression
+    value
 arithmetic
     ADD
     SUBTRACT
@@ -100,8 +95,7 @@ relop
     EQ
     NE
 return
-    RETURN NUMBER ;
-    RETURN ID ;
+    RETURN value ;
     nothing
 
 
@@ -139,11 +133,21 @@ boolean
     expression relop expression
     TRUE
     FALSE
+    value
+init
+    = value
+    nothing
+value
     ID
     NUMBER
-assignment  
 expression
-    x +-/* y
+    expression arithmetic expression
+    value
+arithmetic
+    ADD
+    SUBTRACT
+    MULTIPLY
+    DIVIDE
 relop
     LT
     GT
