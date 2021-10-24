@@ -12,6 +12,9 @@
     int search(char *);
 	void insert_type();
 	void printtree(struct node*);
+	void printTreeUtil(struct node*, int);
+	void printInorder(struct node *);
+	void printBT(char *, struct node *, char *);
 	struct node* mknode(struct node *left, struct node *right, char *token);
 
     struct dataType {
@@ -24,6 +27,7 @@
     int q;
 	char type[10];
     extern int countn;
+	struct node *head;
 
 	struct node { 
 		struct node *left; 
@@ -45,10 +49,7 @@
 %%
 
 program: headers main '(' ')' '{' body return '}' { $2.nd = mknode($6.nd, $7.nd, "main"); $$.nd = mknode($1.nd, $2.nd, "program"); 
-	printf("#######################################################################################\n"); 
-	printf("\t\t\tSyntax Tree in Inorder traversal\n#######################################################################################\n"); 
-	printtree($$.nd); 
-	printf("\n\n");
+	head = $$.nd;
 } 
 ;
 
@@ -74,7 +75,7 @@ body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '
 
 statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($2.nd, $4.nd, "declaration"); }
 | ID '=' expression { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); }
-| ID relop value { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, $2.name); }
+| ID relop expression { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, $2.name); }
 | ID UNARY { $1.nd = mknode(NULL, NULL, $1.name); $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($1.nd, $2.nd, "ITERATOR"); }
 | UNARY ID { $1.nd = mknode(NULL, NULL, $1.name); $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($1.nd, $2.nd, "ITERATOR"); }
 ;
@@ -113,14 +114,21 @@ return: RETURN NUMBER ';' { $$.nd = mknode(NULL, NULL, "return"); }
 
 int main() {
     yyparse();
-    printf("\t\t\tSymbol table\n");
-	printf("#######################################################################################\n");	
-	printf("\n SYMBOL   DATATYPE   TYPE   LINE NUMBER \n");
-	printf("_____________________________\n");
+    printf("\n\n \t\t\t\t\t\t PHASE 1: LEXICAL ANALYSIS \n\n");
+	printf("\nSYMBOL   DATATYPE   TYPE   LINE NUMBER \n");
+	printf("_______________________________________\n\n");
 	int i=0;
 	for(i=0; i<count; i++) {
 		printf("%s\t%s\t%s\t%d\t\n", symbolTable[i].id_name, symbolTable[i].data_type, symbolTable[i].type, symbolTable[i].line_no);
 	}
+	for(i=0;i<count;i++){
+		free(symbolTable[i].id_name);
+		free(symbolTable[i].type);
+	}
+	printf("\n\n");
+	printf("\t\t\t\t\t\t PHASE 2: SYNTAX ANALYSIS \n\n");
+	printtree(head); 
+	printf("\n\n");
 }
 
 int search(char *type) {
@@ -179,14 +187,53 @@ struct node* mknode(struct node *left, struct node *right, char *token) {
 }
 
 void printtree(struct node* tree) {
+	printTreeUtil(tree, 0);
+	printf("\n\n the Inorder traversal of the above tree is: \n\n");
+	printInorder(tree);
+	printf("\n\n");
+	printBT("", tree, "false");
+}
+
+void printInorder(struct node *tree) {
 	int i;
 	if (tree->left) {
-		printtree(tree->left);
+		printInorder(tree->left);
 	}
 	printf("%s, ", tree->token);
 	if (tree->right) {
-		printtree(tree->right);
+		printInorder(tree->right);
 	}
+}
+
+void printTreeUtil(struct node *root, int space) {
+    if(root == NULL)
+        return;
+    space += 7;
+    printTreeUtil(root->right, space);
+    // printf("\n");
+    for (int i = 7; i < space; i++)
+        printf(" ");
+	printf("%s\n", root->token);
+    printTreeUtil(root->left, space);
+}
+
+void printBT(char *prefix, struct node *node, char *isLeft) {
+    if( node != NULL ) {
+        printf("%s", prefix);
+		if(isLeft == "true"){
+			printf("├──");
+		}else{
+			printf("└──");
+		}
+        printf("%s\n", node->token);
+		if(isLeft == "true"){
+			prefix = *prefix + "│   ";
+		}else{
+			prefix = *prefix + "    ";
+		}
+        printBT( prefix, node->left, "true");
+        printBT( prefix, node->right, "false");
+    }
 }
 
 void insert_type() {
