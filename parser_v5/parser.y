@@ -14,7 +14,6 @@
 	void printtree(struct node*);
 	void printTreeUtil(struct node*, int);
 	void printInorder(struct node *);
-	void printBT(char *, struct node *, char *);
 	struct node* mknode(struct node *left, struct node *right, char *token);
 
     struct dataType {
@@ -187,11 +186,10 @@ struct node* mknode(struct node *left, struct node *right, char *token) {
 }
 
 void printtree(struct node* tree) {
-	printTreeUtil(tree, 0);
+	// printTreeUtil(tree, 0);
 	printf("\n\n the Inorder traversal of the above tree is: \n\n");
 	printInorder(tree);
 	printf("\n\n");
-	printBT("", tree, "false");
 }
 
 void printInorder(struct node *tree) {
@@ -215,25 +213,6 @@ void printTreeUtil(struct node *root, int space) {
         printf(" ");
 	printf("%s\n", root->token);
     printTreeUtil(root->left, space);
-}
-
-void printBT(char *prefix, struct node *node, char *isLeft) {
-    if( node != NULL ) {
-        printf("%s", prefix);
-		if(isLeft == "true"){
-			printf("├──");
-		}else{
-			printf("└──");
-		}
-        printf("%s\n", node->token);
-		if(isLeft == "true"){
-			prefix = *prefix + "│   ";
-		}else{
-			prefix = *prefix + "    ";
-		}
-        printBT( prefix, node->left, "true");
-        printBT( prefix, node->right, "false");
-    }
 }
 
 void insert_type() {

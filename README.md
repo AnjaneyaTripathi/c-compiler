@@ -26,11 +26,3 @@ Performs lexical analysis and generates symbol table for a C program with nested
 ### Parser_v5
 
 Performs syntax analysis and generates syntax tree for a C program with nested for loops.
-
-##### Handle return
-
-```
-return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, "return"); $$.nd = mknode($1.nd, $3.nd, "RETURN"); }
-| 
-;
-```
