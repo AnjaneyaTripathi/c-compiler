@@ -159,3 +159,18 @@ return
     RETURN NUMBER ;
     RETURN ID ;
     nothing
+
+
+*********** Stuff to Handle ***********
+1. Arrays
+2. Negative numbers
+
+*********** Semantic Analysis phase *********** 
+Static sematic checks
+
+1. The variables must be declared before they are used
+2. The variables must have matching types when used in arithmetic expressions 
+3. There should be no duplicate declarations - Allowed in different scopes but we consider single scope for simplicity.
+
+Dynamic sematinc checks - Necessary?
+1. Division by zero
