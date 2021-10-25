@@ -10,6 +10,11 @@ int main() {
     x=3;
     y=10;
     z=5;
+    if (x>5) {
+        printf("Hello World");
+    } else {
+        int idx = 1;
+    }
     for(int i=0; i<10; i++) {
         printf("Hello World");
         scanf("%d", &x);
@@ -17,9 +22,5 @@ int main() {
             f=1;
         }
     } 
-    if () {
-        printf("Hello World");
-    } else {
-        int idx = 1;
-    }
+    return 1;
 }

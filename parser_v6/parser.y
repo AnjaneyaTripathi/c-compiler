@@ -22,7 +22,7 @@
         char * data_type;
         char * type;
         int line_no;
-	} symbolTable[20];
+	} symbolTable[40];
 
     int count=0;
     int q;
@@ -45,7 +45,7 @@
 	} 
 %token VOID 
 %token <nam> PRINTFF SCANFF INT FLOAT CHAR FOR IF ELSE TRUE FALSE NUMBER ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY INCLUDE RETURN 
-%type <nam> headers main body return datatype expression statement init value arithmetic relop program
+%type <nam> headers main body return datatype expression statement init value arithmetic relop program else condition
 
 %%
 
@@ -68,21 +68,21 @@ datatype: INT { insert_type(); }
 ;
 
 body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}' { struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); struct node *temp2 = mknode($4.nd, temp, "CONDITION"); $$.nd = mknode(temp2, $11.nd, $1.name); }
-| IF { add('K'); } '(' condition ')' '{' body '}' else
+| IF { add('K'); } '(' condition ')' '{' body '}' else { struct node *iff = mknode($4.nd, $7.nd, $1.name); $$.nd = mknode(iff, $9.nd, "if-else"); }
 | statement ';' { $$.nd = $1.nd; }
 | body body { $$.nd = mknode($1.nd, $2.nd, "statements"); }
 | PRINTFF { add('K'); } '(' STR ')' ';' { $$.nd = mknode(NULL, NULL, "printf"); }
 | SCANFF { add('K'); } '(' STR ',' '&' ID ')' ';' { $$.nd = mknode(NULL, NULL, "scanf"); }
 ;
 
-else: ELSE { add('K'); } '{' body '}'
-|
+else: ELSE { add('K'); } '{' body '}' { $$.nd = mknode(NULL, $4.nd, $1.name); }
+| { $$.nd = NULL; }
 ;
 
-condition: value relop value
-| TRUE { add('K'); }
-| FALSE { add('K'); }
-|
+condition: value relop value { $$.nd = mknode($1.nd, $3.nd, $2.name); }
+| TRUE { add('K'); $$.nd = NULL; }
+| FALSE { add('K'); $$.nd = NULL; }
+| { $$.nd = NULL; }
 ;
 
 statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($2.nd, $4.nd, "declaration"); }
@@ -118,7 +118,7 @@ value: NUMBER { add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
 | ID { $$.nd = mknode(NULL, NULL, $1.name); }
 ;
 
-return: RETURN NUMBER ';' { $$.nd = mknode(NULL, NULL, "return"); }
+return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, "return"); $$.nd = mknode($1.nd, $3.nd, "RETURN"); }
 | { $$.nd = NULL; }
 ;
 
@@ -202,8 +202,8 @@ void printtree(struct node* tree) {
 	printTreeUtil(tree, 0);
 	printf("\n\n the Inorder traversal of the above tree is: \n\n");
 	printInorder(tree);
-	printf("\n\n");
-	printBT("", tree, "false");
+	//printf("\n\n");
+	//printBT("", tree, "false");
 }
 
 void printInorder(struct node *tree) {
