@@ -21,7 +21,7 @@
         char * data_type;
         char * type;
         int line_no;
-	} symbolTable[20];
+	} symbolTable[40];
     int count=0;
     int q;
 	char type[10];
@@ -105,7 +105,7 @@ value: NUMBER { add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
 | ID { $$.nd = mknode(NULL, NULL, $1.name); }
 ;
 
-return: RETURN NUMBER ';' { $$.nd = mknode(NULL, NULL, "return"); }
+return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, "return"); $$.nd = mknode($1.nd, $3.nd, "RETURN"); }
 | { $$.nd = NULL; }
 ;
 
