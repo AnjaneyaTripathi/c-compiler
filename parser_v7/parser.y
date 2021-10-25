@@ -29,6 +29,7 @@
 	char type[10];
     extern int countn;
 	struct node *head;
+	int sem_errors=0;
 
 	struct node { 
 		struct node *left; 
@@ -126,7 +127,8 @@ return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, "return"); $
 
 int main() {
     yyparse();
-    printf("\n\n \t\t\t\t\t\t PHASE 1: LEXICAL ANALYSIS \n\n");
+    printf("\n\n");
+	printf("\t\t\t\t\t\t\t\t PHASE 1: LEXICAL ANALYSIS \n\n");
 	printf("\nSYMBOL   DATATYPE   TYPE   LINE NUMBER \n");
 	printf("_______________________________________\n\n");
 	int i=0;
@@ -138,8 +140,15 @@ int main() {
 		free(symbolTable[i].type);
 	}
 	printf("\n\n");
-	printf("\t\t\t\t\t\t PHASE 2: SYNTAX ANALYSIS \n\n");
+	printf("\t\t\t\t\t\t\t\t PHASE 2: SYNTAX ANALYSIS \n\n");
 	printtree(head); 
+	printf("\n\n\n\n");
+	printf("\t\t\t\t\t\t\t\t PHASE 3: SEMANTIC ANALYSIS \n\n");
+	if(sem_errors>0){
+		printf("Semantic analysis completed with %d errors!", sem_errors);
+	}else{
+		printf("Semnatic analysis completed with no errors");
+	}
 	printf("\n\n");
 }
 
@@ -157,7 +166,8 @@ int search(char *type) {
 void check_declaration(char *c) {
     q = search(c);
     if(!q) {
-        printf("ERROR: Variable \"%s\" not declared before usage!\n", c);
+        printf("ERROR: Line %d: Variable \"%s\" not declared before usage!\n", countn+1, c);
+		sem_errors++;
         //exit(0);
     }
 }
@@ -195,7 +205,8 @@ void add(char c) {
 		}
     }
     else if(c == 'V' && q) {
-        printf("ERROR: Multiple declarations of \"%s\" not allowed!\n", yytext);
+        printf("ERROR: Line %d: Multiple declarations of \"%s\" not allowed!\n", countn+1, yytext);
+		sem_errors++;
     }
 }
 
@@ -211,9 +222,8 @@ struct node* mknode(struct node *left, struct node *right, char *token) {
 
 void printtree(struct node* tree) {
 	//printTreeUtil(tree, 0);
-	printf("\n\n Inorder traversal of the Parse Tree is: \n\n");
+	printf("\n\nInorder traversal of the Parse Tree is: \n\n");
 	printInorder(tree);
-	//printf("\n\n");
 }
 
 void printInorder(struct node *tree) {
@@ -232,7 +242,6 @@ void printTreeUtil(struct node *root, int space) {
         return;
     space += 7;
     printTreeUtil(root->right, space);
-    // printf("\n");
     for (int i = 7; i < space; i++)
         printf(" ");
 	printf("%s\n", root->token);

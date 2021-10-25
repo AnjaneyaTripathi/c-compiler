@@ -172,5 +172,14 @@ Static sematic checks
 2. The variables must have matching types when used in arithmetic expressions 
 3. There should be no duplicate declarations - Allowed in different scopes but we consider single scope for simplicity.
 
-Dynamic sematinc checks - Necessary?
-1. Division by zero
+*********** Type conversions to handle ***********
+1. int i = 3.14 => floattoint(3.14)
+2. float i = 3 => inttofloat(3)
+3. float i = 3.14; printf("%d", i); => error
+4. int i = 3; printf("%f", i); => error
+5. float i; scanf("%d", &i); => error
+6. int i; scanf("%f", &i); => error
+7. +, *, -, / of different types => convert to float
+8. id = expression of different types => convert expression to type of id
+9. expression relop expression => convert to float
+

@@ -13,6 +13,7 @@ int main() {
     z=5;
     if (x>5) {
         for(int k=0; k<10; k++) {
+            char f;
             printf("Saddd");
         }
     } else {
