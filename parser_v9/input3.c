@@ -8,5 +8,7 @@ int main() {
         printf("Hello World");
         x = a + 3;
     } 
+    int y=9;
+    y=a+1;
     return 1;
 }

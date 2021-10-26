@@ -34,6 +34,7 @@
 	int sem_errors=0;
 	int temp_var=0;
 	int label=0;
+	int is_for=0;
 
 	struct node { 
 		struct node *left; 
@@ -87,8 +88,14 @@ datatype: INT { insert_type(); }
 | VOID { insert_type(); }
 ;
 
-body: FOR { add('K'); } '(' statement ';' condition ';' statement ')' '{' body '}' { struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); struct node *temp2 = mknode($4.nd, temp, "CONDITION"); $$.nd = mknode(temp2, $11.nd, $1.name); }
-| IF { add('K'); } '(' condition ')' { printf("\nLABEL %s:\n", $4.if_body); } '{' body '}' { printf("\nLABEL %s:\n", $4.else_body); } else { 
+body: FOR { add('K'); is_for = 1; } '(' statement ';' condition ';' statement ')' '{' body '}' { 
+	struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); 
+	struct node *temp2 = mknode($4.nd, temp, "CONDITION"); 
+	$$.nd = mknode(temp2, $11.nd, $1.name); 
+	printf("JUMP to %s\n", $6.if_body);
+	printf("\nLABEL %s\n", $6.else_body);
+}
+| IF { add('K'); is_for = 0; } '(' condition ')' { printf("\nLABEL %s:\n", $4.if_body); } '{' body '}' { printf("\nLABEL %s:\n", $4.else_body); } else { 
 	struct node *iff = mknode($4.nd, $8.nd, $1.name); 
 	$$.nd = mknode(iff, $11.nd, "if-else"); 
 	printf("GOTO next\n");
@@ -105,9 +112,16 @@ else: ELSE { add('K'); } '{' body '}' { $$.nd = mknode(NULL, $4.nd, $1.name); }
 
 condition: value relop value { 
 	$$.nd = mknode($1.nd, $3.nd, $2.name); 
-	printf("\nif %s %s %s GOTO L%d else GOTO L%d\n", $1.name, $2.name, $3.name, label, label+1);
-	sprintf($$.if_body, "L%d", label++);
-	sprintf($$.else_body, "L%d", label++);
+	if(is_for) {
+		sprintf($$.if_body, "L%d", label++);
+		printf("\nLABEL %s:\n", $$.if_body);
+		printf("\nif NOT (%s %s %s) GOTO L%d\n", $1.name, $2.name, $3.name, label);
+		sprintf($$.else_body, "L%d", label++);
+	} else {
+		printf("\nif (%s %s %s) GOTO L%d else GOTO L%d\n", $1.name, $2.name, $3.name, label, label+1);
+		sprintf($$.if_body, "L%d", label++);
+		sprintf($$.else_body, "L%d", label++);
+	}
 }
 | TRUE { add('K'); $$.nd = NULL; }
 | FALSE { add('K'); $$.nd = NULL; }
@@ -149,8 +163,31 @@ statement: datatype ID { add('V'); } init {
 	printf("=\t %s\t %s\t\n", $1.name, $4.name);
 }
 | ID { check_declaration($1.name); } relop expression { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $4.nd, $3.name); }
-| ID { check_declaration($1.name); } UNARY { $1.nd = mknode(NULL, NULL, $1.name); $3.nd = mknode(NULL, NULL, $3.name); $$.nd = mknode($1.nd, $3.nd, "ITERATOR"); }
-| UNARY ID { check_declaration($2.name); $1.nd = mknode(NULL, NULL, $1.name); $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($1.nd, $2.nd, "ITERATOR"); }
+| ID { check_declaration($1.name); } UNARY { 
+	$1.nd = mknode(NULL, NULL, $1.name); 
+	$3.nd = mknode(NULL, NULL, $3.name); 
+	$$.nd = mknode($1.nd, $3.nd, "ITERATOR");  
+	if(!strcmp($3.name, "++")) {
+		printf("+\t %s\t 1\t t%d\n", $1.name, temp_var);
+	}
+	else {
+		printf("-\t %s\t 1\t t%d\n", $1.name, temp_var);
+	}
+	printf("=\t %s\t t%d\n", $1.name, temp_var++);
+}
+| UNARY ID { 
+	check_declaration($2.name); 
+	$1.nd = mknode(NULL, NULL, $1.name); 
+	$2.nd = mknode(NULL, NULL, $2.name); 
+	$$.nd = mknode($1.nd, $2.nd, "ITERATOR"); 
+	if(!strcmp($1.name, "++")) {
+		printf("+\t %s\t 1\t t%d\n", $2.name, temp_var);
+	}
+	else {
+		printf("-\t %s\t 1\t t%d\n", $2.name, temp_var);
+	}
+	printf("=\t %s\t t%d\n", $2.name, temp_var++);
+}
 ;
 
 init: '=' value { $$.nd = $2.nd; sprintf($$.type, $2.type); strcpy($$.name, $2.name); }
