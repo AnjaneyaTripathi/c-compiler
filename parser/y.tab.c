@@ -172,6 +172,7 @@
 	int temp_var=0;
 	int label=0;
 	int is_for=0;
+	char buff[100];
 
 	struct node { 
 		struct node *left; 
@@ -201,7 +202,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 47 "parser.y"
+#line 48 "parser.y"
 { struct var_name { 
 			char name[100]; 
 			struct node* nd;
@@ -221,7 +222,7 @@ typedef union YYSTYPE
 		} nam3;
 	}
 /* Line 193 of yacc.c.  */
-#line 225 "y.tab.c"
+#line 226 "y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -234,7 +235,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 238 "y.tab.c"
+#line 239 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -539,12 +540,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    73,    73,    78,    79,    79,    82,    85,    86,    87,
-      88,    91,    91,    98,    98,    98,    98,   103,   104,   105,
-     105,   106,   106,   109,   109,   110,   113,   126,   127,   128,
-     131,   131,   147,   147,   165,   165,   166,   166,   179,   194,
-     195,   198,   218,   221,   222,   223,   224,   227,   228,   229,
-     230,   231,   232,   235,   236,   237,   240,   240,   241
+       0,    74,    74,    79,    80,    80,    83,    86,    87,    88,
+      89,    92,    92,   100,   100,   100,   100,   105,   106,   107,
+     107,   108,   108,   111,   111,   112,   115,   128,   129,   130,
+     133,   133,   153,   153,   171,   171,   172,   172,   186,   203,
+     204,   207,   227,   230,   231,   232,   233,   236,   237,   238,
+     239,   240,   241,   244,   245,   246,   249,   249,   250
 };
 #endif
 
@@ -1522,85 +1523,86 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 73 "parser.y"
+#line 74 "parser.y"
     { (yyvsp[(2) - (8)].nam).nd = mknode((yyvsp[(6) - (8)].nam).nd, (yyvsp[(7) - (8)].nam).nd, "main"); (yyval.nam).nd = mknode((yyvsp[(1) - (8)].nam).nd, (yyvsp[(2) - (8)].nam).nd, "program"); 
 	head = (yyval.nam).nd;
 }
     break;
 
   case 3:
-#line 78 "parser.y"
+#line 79 "parser.y"
     { (yyval.nam).nd = mknode((yyvsp[(1) - (2)].nam).nd, (yyvsp[(2) - (2)].nam).nd, "headers"); }
     break;
 
   case 4:
-#line 79 "parser.y"
+#line 80 "parser.y"
     { add('H'); }
     break;
 
   case 5:
-#line 79 "parser.y"
+#line 80 "parser.y"
     { (yyval.nam).nd = mknode(NULL, NULL, (yyvsp[(1) - (2)].nam).name); }
     break;
 
   case 6:
-#line 82 "parser.y"
+#line 83 "parser.y"
     { add('K'); }
     break;
 
   case 7:
-#line 85 "parser.y"
-    { insert_type(); }
-    break;
-
-  case 8:
 #line 86 "parser.y"
     { insert_type(); }
     break;
 
-  case 9:
+  case 8:
 #line 87 "parser.y"
     { insert_type(); }
     break;
 
-  case 10:
+  case 9:
 #line 88 "parser.y"
     { insert_type(); }
     break;
 
+  case 10:
+#line 89 "parser.y"
+    { insert_type(); }
+    break;
+
   case 11:
-#line 91 "parser.y"
+#line 92 "parser.y"
     { add('K'); is_for = 1; }
     break;
 
   case 12:
-#line 91 "parser.y"
+#line 92 "parser.y"
     { 
 	struct node *temp = mknode((yyvsp[(6) - (12)].nam3).nd, (yyvsp[(8) - (12)].nam).nd, "CONDITION"); 
 	struct node *temp2 = mknode((yyvsp[(4) - (12)].nam).nd, temp, "CONDITION"); 
 	(yyval.nam).nd = mknode(temp2, (yyvsp[(11) - (12)].nam).nd, (yyvsp[(1) - (12)].nam).name); 
+	printf("%s", buff);
 	printf("JUMP to %s\n", (yyvsp[(6) - (12)].nam3).if_body);
 	printf("\nLABEL %s\n", (yyvsp[(6) - (12)].nam3).else_body);
 }
     break;
 
   case 13:
-#line 98 "parser.y"
+#line 100 "parser.y"
     { add('K'); is_for = 0; }
     break;
 
   case 14:
-#line 98 "parser.y"
+#line 100 "parser.y"
     { printf("\nLABEL %s:\n", (yyvsp[(4) - (5)].nam3).if_body); }
     break;
 
   case 15:
-#line 98 "parser.y"
+#line 100 "parser.y"
     { printf("\nLABEL %s:\n", (yyvsp[(4) - (9)].nam3).else_body); }
     break;
 
   case 16:
-#line 98 "parser.y"
+#line 100 "parser.y"
     { 
 	struct node *iff = mknode((yyvsp[(4) - (11)].nam3).nd, (yyvsp[(8) - (11)].nam).nd, (yyvsp[(1) - (11)].nam).name); 
 	(yyval.nam).nd = mknode(iff, (yyvsp[(11) - (11)].nam).nd, "if-else"); 
@@ -1609,52 +1611,52 @@ yyreduce:
     break;
 
   case 17:
-#line 103 "parser.y"
+#line 105 "parser.y"
     { (yyval.nam).nd = (yyvsp[(1) - (2)].nam).nd; }
     break;
 
   case 18:
-#line 104 "parser.y"
+#line 106 "parser.y"
     { (yyval.nam).nd = mknode((yyvsp[(1) - (2)].nam).nd, (yyvsp[(2) - (2)].nam).nd, "statements"); }
     break;
 
   case 19:
-#line 105 "parser.y"
+#line 107 "parser.y"
     { add('K'); }
     break;
 
   case 20:
-#line 105 "parser.y"
+#line 107 "parser.y"
     { (yyval.nam).nd = mknode(NULL, NULL, "printf"); }
     break;
 
   case 21:
-#line 106 "parser.y"
+#line 108 "parser.y"
     { add('K'); }
     break;
 
   case 22:
-#line 106 "parser.y"
+#line 108 "parser.y"
     { (yyval.nam).nd = mknode(NULL, NULL, "scanf"); }
     break;
 
   case 23:
-#line 109 "parser.y"
+#line 111 "parser.y"
     { add('K'); }
     break;
 
   case 24:
-#line 109 "parser.y"
+#line 111 "parser.y"
     { (yyval.nam).nd = mknode(NULL, (yyvsp[(4) - (5)].nam).nd, (yyvsp[(1) - (5)].nam).name); }
     break;
 
   case 25:
-#line 110 "parser.y"
+#line 112 "parser.y"
     { (yyval.nam).nd = NULL; }
     break;
 
   case 26:
-#line 113 "parser.y"
+#line 115 "parser.y"
     { 
 	(yyval.nam3).nd = mknode((yyvsp[(1) - (3)].nam2).nd, (yyvsp[(3) - (3)].nam2).nd, (yyvsp[(2) - (3)].nam).name); 
 	if(is_for) {
@@ -1671,31 +1673,31 @@ yyreduce:
     break;
 
   case 27:
-#line 126 "parser.y"
+#line 128 "parser.y"
     { add('K'); (yyval.nam3).nd = NULL; }
     break;
 
   case 28:
-#line 127 "parser.y"
+#line 129 "parser.y"
     { add('K'); (yyval.nam3).nd = NULL; }
     break;
 
   case 29:
-#line 128 "parser.y"
+#line 130 "parser.y"
     { (yyval.nam3).nd = NULL; }
     break;
 
   case 30:
-#line 131 "parser.y"
+#line 133 "parser.y"
     { add('V'); }
     break;
 
   case 31:
-#line 131 "parser.y"
+#line 133 "parser.y"
     { 
 	(yyvsp[(2) - (4)].nam).nd = mknode(NULL, NULL, (yyvsp[(2) - (4)].nam).name); 
 	int t = check_types((yyvsp[(1) - (4)].nam).name, (yyvsp[(4) - (4)].nam2).type); 
-	if(t>0){ 
+	if(t>0) { 
 		if(t == 1) {
 			struct node *temp = mknode(NULL, (yyvsp[(4) - (4)].nam2).nd, "inttofloat"); 
 			(yyval.nam).nd = mknode((yyvsp[(2) - (4)].nam).nd, temp, "declaration"); 
@@ -1703,7 +1705,11 @@ yyreduce:
 			struct node *temp = mknode(NULL, (yyvsp[(4) - (4)].nam2).nd, "floattoint"); 
 			(yyval.nam).nd = mknode((yyvsp[(2) - (4)].nam).nd, temp, "declaration"); 
 		} 
-	} else { 
+	} 
+	else if(t == -1) {
+		(yyval.nam).nd = mknode((yyvsp[(2) - (4)].nam).nd, (yyvsp[(4) - (4)].nam2).nd, "declaration"); 
+	}
+	else { 
 		(yyval.nam).nd = mknode((yyvsp[(2) - (4)].nam).nd, (yyvsp[(4) - (4)].nam2).nd, "declaration"); 
 	} 
 	printf("=\t %s\t %s\t\n", (yyvsp[(2) - (4)].nam).name, (yyvsp[(4) - (4)].nam2).name);
@@ -1711,12 +1717,12 @@ yyreduce:
     break;
 
   case 32:
-#line 147 "parser.y"
+#line 153 "parser.y"
     { check_declaration((yyvsp[(1) - (1)].nam).name); }
     break;
 
   case 33:
-#line 147 "parser.y"
+#line 153 "parser.y"
     {
 	(yyvsp[(1) - (4)].nam).nd = mknode(NULL, NULL, (yyvsp[(1) - (4)].nam).name); 
 	char *id_type = get_type((yyvsp[(1) - (4)].nam).name); 
@@ -1738,66 +1744,69 @@ yyreduce:
     break;
 
   case 34:
-#line 165 "parser.y"
+#line 171 "parser.y"
     { check_declaration((yyvsp[(1) - (1)].nam).name); }
     break;
 
   case 35:
-#line 165 "parser.y"
+#line 171 "parser.y"
     { (yyvsp[(1) - (4)].nam).nd = mknode(NULL, NULL, (yyvsp[(1) - (4)].nam).name); (yyval.nam).nd = mknode((yyvsp[(1) - (4)].nam).nd, (yyvsp[(4) - (4)].nam2).nd, (yyvsp[(3) - (4)].nam).name); }
     break;
 
   case 36:
-#line 166 "parser.y"
+#line 172 "parser.y"
     { check_declaration((yyvsp[(1) - (1)].nam).name); }
     break;
 
   case 37:
-#line 166 "parser.y"
+#line 172 "parser.y"
     { 
 	(yyvsp[(1) - (3)].nam).nd = mknode(NULL, NULL, (yyvsp[(1) - (3)].nam).name); 
 	(yyvsp[(3) - (3)].nam).nd = mknode(NULL, NULL, (yyvsp[(3) - (3)].nam).name); 
-	(yyval.nam).nd = mknode((yyvsp[(1) - (3)].nam).nd, (yyvsp[(3) - (3)].nam).nd, "ITERATOR"); 
-	printf("%s\n", (yyvsp[(3) - (3)].nam).name); 
+	(yyval.nam).nd = mknode((yyvsp[(1) - (3)].nam).nd, (yyvsp[(3) - (3)].nam).nd, "ITERATOR");  
 	if(!strcmp((yyvsp[(3) - (3)].nam).name, "++")) {
-		printf("+\t %s\t 1\t t%d\n", (yyvsp[(1) - (3)].nam).name, temp_var);
+		sprintf(buff, "+\t %s\t 1\t t%d\n=\t %s\t t%d\n", (yyvsp[(1) - (3)].nam).name, temp_var, (yyvsp[(1) - (3)].nam).name, temp_var++);
+		//printf("+\t %s\t 1\t t%d\n", $1.name, temp_var);
 	}
 	else {
-		printf("-\t %s\t 1\t t%d\n", (yyvsp[(1) - (3)].nam).name, temp_var);
+		sprintf(buff, "-\t %s\t 1\t t%d\n=\t %s\t t%d\n", (yyvsp[(1) - (3)].nam).name, temp_var, (yyvsp[(1) - (3)].nam).name, temp_var++);
+		//printf("-\t %s\t 1\t t%d\n", $1.name, temp_var);
 	}
-	printf("=\t %s\t t%d\n", (yyvsp[(1) - (3)].nam).name, temp_var++);
+	//printf("=\t %s\t t%d\n", $1.name, temp_var++);
 }
     break;
 
   case 38:
-#line 179 "parser.y"
+#line 186 "parser.y"
     { 
 	check_declaration((yyvsp[(2) - (2)].nam).name); 
 	(yyvsp[(1) - (2)].nam).nd = mknode(NULL, NULL, (yyvsp[(1) - (2)].nam).name); 
 	(yyvsp[(2) - (2)].nam).nd = mknode(NULL, NULL, (yyvsp[(2) - (2)].nam).name); 
 	(yyval.nam).nd = mknode((yyvsp[(1) - (2)].nam).nd, (yyvsp[(2) - (2)].nam).nd, "ITERATOR"); 
 	if(!strcmp((yyvsp[(1) - (2)].nam).name, "++")) {
-		printf("+\t %s\t 1\t t%d\n", (yyvsp[(2) - (2)].nam).name, temp_var);
+		sprintf(buff, "+\t %s\t 1\t t%d\n=\t %s\t t%d\n", (yyvsp[(2) - (2)].nam).name, temp_var, (yyvsp[(2) - (2)].nam).name, temp_var++);
+		//printf("+\t %s\t 1\t t%d\n", $2.name, temp_var);
 	}
 	else {
-		printf("-\t %s\t 1\t t%d\n", (yyvsp[(2) - (2)].nam).name, temp_var);
+		sprintf(buff, "-\t %s\t 1\t t%d\n=\t %s\t t%d\n", (yyvsp[(2) - (2)].nam).name, temp_var, (yyvsp[(2) - (2)].nam).name, temp_var++);
+		//printf("-\t %s\t 1\t t%d\n", $2.name, temp_var);
 	}
-	printf("=\t %s\t t%d\n", (yyvsp[(2) - (2)].nam).name, temp_var++);
+	//printf("=\t %s\t t%d\n", $2.name, temp_var++);
 }
     break;
 
   case 39:
-#line 194 "parser.y"
+#line 203 "parser.y"
     { (yyval.nam2).nd = (yyvsp[(2) - (2)].nam2).nd; sprintf((yyval.nam2).type, (yyvsp[(2) - (2)].nam2).type); strcpy((yyval.nam2).name, (yyvsp[(2) - (2)].nam2).name); }
     break;
 
   case 40:
-#line 195 "parser.y"
+#line 204 "parser.y"
     { sprintf((yyval.nam2).type, "null"); (yyval.nam2).nd = mknode(NULL, NULL, "NULL"); strcpy((yyval.nam2).name, "NULL"); }
     break;
 
   case 41:
-#line 198 "parser.y"
+#line 207 "parser.y"
     { 
 	if((yyvsp[(1) - (3)].nam2).type[0] == (yyvsp[(3) - (3)].nam2).type[0]) {
 		sprintf((yyval.nam2).type, (yyvsp[(1) - (3)].nam2).type);
@@ -1821,43 +1830,43 @@ yyreduce:
     break;
 
   case 42:
-#line 218 "parser.y"
+#line 227 "parser.y"
     { strcpy((yyval.nam2).name, (yyvsp[(1) - (1)].nam2).name); sprintf((yyval.nam2).type, (yyvsp[(1) - (1)].nam2).type); (yyval.nam2).nd = (yyvsp[(1) - (1)].nam2).nd; }
     break;
 
   case 53:
-#line 235 "parser.y"
+#line 244 "parser.y"
     { strcpy((yyval.nam2).name, (yyvsp[(1) - (1)].nam).name); sprintf((yyval.nam2).type, "int"); add('C'); (yyval.nam2).nd = mknode(NULL, NULL, (yyvsp[(1) - (1)].nam).name); }
     break;
 
   case 54:
-#line 236 "parser.y"
+#line 245 "parser.y"
     { strcpy((yyval.nam2).name, (yyvsp[(1) - (1)].nam).name); sprintf((yyval.nam2).type, "float"); add('C'); (yyval.nam2).nd = mknode(NULL, NULL, (yyvsp[(1) - (1)].nam).name); }
     break;
 
   case 55:
-#line 237 "parser.y"
+#line 246 "parser.y"
     { strcpy((yyval.nam2).name, (yyvsp[(1) - (1)].nam).name); char *id_type = get_type((yyvsp[(1) - (1)].nam).name); sprintf((yyval.nam2).type, id_type); check_declaration((yyvsp[(1) - (1)].nam).name); (yyval.nam2).nd = mknode(NULL, NULL, (yyvsp[(1) - (1)].nam).name); }
     break;
 
   case 56:
-#line 240 "parser.y"
+#line 249 "parser.y"
     { add('K'); }
     break;
 
   case 57:
-#line 240 "parser.y"
+#line 249 "parser.y"
     { (yyvsp[(1) - (4)].nam).nd = mknode(NULL, NULL, "return"); (yyval.nam).nd = mknode((yyvsp[(1) - (4)].nam).nd, (yyvsp[(3) - (4)].nam2).nd, "RETURN"); }
     break;
 
   case 58:
-#line 241 "parser.y"
+#line 250 "parser.y"
     { (yyval.nam).nd = NULL; }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1861 "y.tab.c"
+#line 1870 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2071,7 +2080,7 @@ yyreturn:
 }
 
 
-#line 244 "parser.y"
+#line 253 "parser.y"
 
 
 int main() {
@@ -2122,9 +2131,11 @@ void check_declaration(char *c) {
 }
 
 int check_types(char *type1, char *type2){
-	if(type1[0] == type2[0])
+	if(!strcmp(type1, type2))
 		return 0;
-	if(type1[0]=='f')
+	if(!strcmp(type2, "null"))
+		return -1;
+	if(!strcmp(type1, "float"))
 		return 1;
 	return 2;
 }

@@ -35,6 +35,7 @@
 	int temp_var=0;
 	int label=0;
 	int is_for=0;
+	char buff[100];
 
 	struct node { 
 		struct node *left; 
@@ -92,6 +93,7 @@ body: FOR { add('K'); is_for = 1; } '(' statement ';' condition ';' statement ')
 	struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); 
 	struct node *temp2 = mknode($4.nd, temp, "CONDITION"); 
 	$$.nd = mknode(temp2, $11.nd, $1.name); 
+	printf("%s", buff);
 	printf("JUMP to %s\n", $6.if_body);
 	printf("\nLABEL %s\n", $6.else_body);
 }
@@ -131,7 +133,7 @@ condition: value relop value {
 statement: datatype ID { add('V'); } init { 
 	$2.nd = mknode(NULL, NULL, $2.name); 
 	int t = check_types($1.name, $4.type); 
-	if(t>0){ 
+	if(t>0) { 
 		if(t == 1) {
 			struct node *temp = mknode(NULL, $4.nd, "inttofloat"); 
 			$$.nd = mknode($2.nd, temp, "declaration"); 
@@ -139,7 +141,11 @@ statement: datatype ID { add('V'); } init {
 			struct node *temp = mknode(NULL, $4.nd, "floattoint"); 
 			$$.nd = mknode($2.nd, temp, "declaration"); 
 		} 
-	} else { 
+	} 
+	else if(t == -1) {
+		$$.nd = mknode($2.nd, $4.nd, "declaration"); 
+	}
+	else { 
 		$$.nd = mknode($2.nd, $4.nd, "declaration"); 
 	} 
 	printf("=\t %s\t %s\t\n", $2.name, $4.name);
@@ -168,12 +174,14 @@ statement: datatype ID { add('V'); } init {
 	$3.nd = mknode(NULL, NULL, $3.name); 
 	$$.nd = mknode($1.nd, $3.nd, "ITERATOR");  
 	if(!strcmp($3.name, "++")) {
-		printf("+\t %s\t 1\t t%d\n", $1.name, temp_var);
+		sprintf(buff, "+\t %s\t 1\t t%d\n=\t %s\t t%d\n", $1.name, temp_var, $1.name, temp_var++);
+		//printf("+\t %s\t 1\t t%d\n", $1.name, temp_var);
 	}
 	else {
-		printf("-\t %s\t 1\t t%d\n", $1.name, temp_var);
+		sprintf(buff, "-\t %s\t 1\t t%d\n=\t %s\t t%d\n", $1.name, temp_var, $1.name, temp_var++);
+		//printf("-\t %s\t 1\t t%d\n", $1.name, temp_var);
 	}
-	printf("=\t %s\t t%d\n", $1.name, temp_var++);
+	//printf("=\t %s\t t%d\n", $1.name, temp_var++);
 }
 | UNARY ID { 
 	check_declaration($2.name); 
@@ -181,12 +189,14 @@ statement: datatype ID { add('V'); } init {
 	$2.nd = mknode(NULL, NULL, $2.name); 
 	$$.nd = mknode($1.nd, $2.nd, "ITERATOR"); 
 	if(!strcmp($1.name, "++")) {
-		printf("+\t %s\t 1\t t%d\n", $2.name, temp_var);
+		sprintf(buff, "+\t %s\t 1\t t%d\n=\t %s\t t%d\n", $2.name, temp_var, $2.name, temp_var++);
+		//printf("+\t %s\t 1\t t%d\n", $2.name, temp_var);
 	}
 	else {
-		printf("-\t %s\t 1\t t%d\n", $2.name, temp_var);
+		sprintf(buff, "-\t %s\t 1\t t%d\n=\t %s\t t%d\n", $2.name, temp_var, $2.name, temp_var++);
+		//printf("-\t %s\t 1\t t%d\n", $2.name, temp_var);
 	}
-	printf("=\t %s\t t%d\n", $2.name, temp_var++);
+	//printf("=\t %s\t t%d\n", $2.name, temp_var++);
 }
 ;
 
@@ -290,9 +300,11 @@ void check_declaration(char *c) {
 }
 
 int check_types(char *type1, char *type2){
-	if(type1[0] == type2[0])
+	if(!strcmp(type1, type2))
 		return 0;
-	if(type1[0]=='f')
+	if(!strcmp(type2, "null"))
+		return -1;
+	if(!strcmp(type1, "float"))
 		return 1;
 	return 2;
 }
