@@ -15,6 +15,8 @@
 	void printTreeUtil(struct node*, int);
 	void printInorder(struct node *);
     void check_declaration(char *);
+	int check_types(char *, char *);
+	char *get_type(char *);
 	struct node* mknode(struct node *left, struct node *right, char *token);
 
     struct dataType {
@@ -42,11 +44,18 @@
 %union { struct var_name { 
 		char name[100]; 
 		struct node* nd;
-		} nam; 
+		} nam;
+
+		struct var_name2 { 
+		char name[100]; 
+		struct node* nd;
+		char type[5];
+		} nam2; 
 	} 
 %token VOID 
-%token <nam> PRINTFF SCANFF INT FLOAT CHAR FOR IF ELSE TRUE FALSE NUMBER ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY INCLUDE RETURN 
-%type <nam> headers main body return datatype expression statement init value arithmetic relop program else condition
+%token <nam> PRINTFF SCANFF INT FLOAT CHAR FOR IF ELSE TRUE FALSE NUMBER FLOAT_NUM ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY INCLUDE RETURN 
+%type <nam> headers main body return datatype statement arithmetic relop program else condition
+%type <nam2> init value expression
 
 %%
 
@@ -86,19 +95,65 @@ condition: value relop value { $$.nd = mknode($1.nd, $3.nd, $2.name); }
 | { $$.nd = NULL; }
 ;
 
-statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($2.nd, $4.nd, "declaration"); }
-| ID { check_declaration($1.name); } '=' expression { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $4.nd, "="); }
+statement: datatype ID { add('V'); } init { 
+	$2.nd = mknode(NULL, NULL, $2.name); 
+	int t = check_types($1.name, $4.type); 
+	if(t>0){ 
+		if(t == 1){
+			struct node *temp = mknode(NULL, $4.nd, "inttofloat"); 
+			$$.nd = mknode($2.nd, temp, "declaration"); 
+		} else{ 
+			struct node *temp = mknode(NULL, $4.nd, "floattoint"); 
+			$$.nd = mknode($2.nd, temp, "declaration"); 
+		} 
+	} else { 
+		$$.nd = mknode($2.nd, $4.nd, "declaration"); 
+	} 
+}
+| ID { check_declaration($1.name); } '=' expression {
+	$1.nd = mknode(NULL, NULL, $1.name); 
+	char *id_type = get_type($1.name); 
+	if(id_type[0] != $4.type[0]){
+		if(id_type[0] == 'i'){
+			struct node *temp = mknode(NULL, $4.nd, "floattoint");
+			$$.nd = mknode($1.nd, temp, "="); 
+		}
+		else{
+			struct node *temp = mknode(NULL, $4.nd, "inttofloat");
+			$$.nd = mknode($1.nd, temp, "="); 
+		}
+	}
+	else{
+		$$.nd = mknode($1.nd, $4.nd, "="); 
+	}
+}
 | ID { check_declaration($1.name); } relop expression { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $4.nd, $3.name); }
 | ID { check_declaration($1.name); } UNARY { $1.nd = mknode(NULL, NULL, $1.name); $3.nd = mknode(NULL, NULL, $3.name); $$.nd = mknode($1.nd, $3.nd, "ITERATOR"); }
 | UNARY ID { check_declaration($2.name); $1.nd = mknode(NULL, NULL, $1.name); $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($1.nd, $2.nd, "ITERATOR"); }
 ;
 
-init: '=' value { $$.nd = $2.nd; }
-| { $$.nd = mknode(NULL, NULL, "NULL"); }
+init: '=' value { $$.nd = $2.nd; sprintf($$.type, $2.type); }
+| { sprintf($$.type, "null"); $$.nd = mknode(NULL, NULL, "NULL"); }
 ;
 
-expression: expression arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); }
-| value { $$.nd = $1.nd; }
+expression: expression arithmetic expression { 
+	if($1.type[0] == $3.type[0]){
+		sprintf($$.type, $1.type);
+		$$.nd = mknode($1.nd, $3.nd, $2.name); 
+	}
+	else{
+		sprintf($$.type, "float");
+		if($1.type[0] == 'i'){
+			struct node *temp = mknode(NULL, $1.nd, "inttofloat");
+			$$.nd = mknode(temp, $3.nd, $2.name);
+		}
+		else{
+			struct node *temp = mknode(NULL, $3.nd, "inttofloat");
+			$$.nd = mknode($1.nd, temp, $2.name);
+		}
+	}
+}
+| value { sprintf($$.type, $1.type); $$.nd = $1.nd; }
 ;
 
 arithmetic: ADD 
@@ -115,8 +170,9 @@ relop: LT
 | NE
 ;
 
-value: NUMBER { add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
-| ID { check_declaration($1.name); $$.nd = mknode(NULL, NULL, $1.name); }
+value: NUMBER { sprintf($$.type, "int"); add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
+| FLOAT_NUM { sprintf($$.type, "float"); add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
+| ID { char *id_type = get_type($1.name); sprintf($$.type, id_type); check_declaration($1.name); $$.nd = mknode(NULL, NULL, $1.name); }
 ;
 
 return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, "return"); $$.nd = mknode($1.nd, $3.nd, "RETURN"); }
@@ -147,7 +203,7 @@ int main() {
 	if(sem_errors>0){
 		printf("Semantic analysis completed with %d errors!", sem_errors);
 	}else{
-		printf("Semantic analysis completed with no errors");
+		printf("Semnatic analysis completed with no errors");
 	}
 	printf("\n\n");
 }
@@ -170,6 +226,24 @@ void check_declaration(char *c) {
 		sem_errors++;
         //exit(0);
     }
+}
+
+int check_types(char *type1, char *type2){
+	if(type1[0] == type2[0])
+		return 0;
+	if(type1[0]=='f')
+		return 1;
+	return 2;
+}
+
+char *get_type(char *var){
+	for(int i=0; i<count; i++){
+		// Insert proper equality check function
+		// Handle case of use before declaration
+		if(symbolTable[i].id_name[0] == var[0]){
+			return symbolTable[i].data_type;
+		}
+	}
 }
 
 void add(char c) {
