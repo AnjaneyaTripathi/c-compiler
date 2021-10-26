@@ -123,8 +123,8 @@ typedef union YYSTYPE
 		struct var_name3 {
 			char name[100];
 			struct node* nd;
-			char *if_body;
-			char *else_body;
+			char if_body[5];
+			char else_body[5];
 		} nam3;
 	}
 /* Line 1529 of yacc.c.  */

@@ -57,8 +57,8 @@
 		struct var_name3 {
 			char name[100];
 			struct node* nd;
-			char *if_body;
-			char *else_body;
+			char if_body[5];
+			char else_body[5];
 		} nam3;
 	} 
 %token VOID 
@@ -87,8 +87,12 @@ datatype: INT { insert_type(); }
 | VOID { insert_type(); }
 ;
 
-body: FOR { add('K'); } '(' statement ';' statement ';' statement ')' '{' body '}' { struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); struct node *temp2 = mknode($4.nd, temp, "CONDITION"); $$.nd = mknode(temp2, $11.nd, $1.name); }
-| IF { add('K'); } '(' condition ')' '{' body '}' else { struct node *iff = mknode($4.nd, $7.nd, $1.name); $$.nd = mknode(iff, $9.nd, "if-else"); }
+body: FOR { add('K'); } '(' statement ';' condition ';' statement ')' '{' body '}' { struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); struct node *temp2 = mknode($4.nd, temp, "CONDITION"); $$.nd = mknode(temp2, $11.nd, $1.name); }
+| IF { add('K'); } '(' condition ')' { printf("\nLABEL %s:\n", $4.if_body); } '{' body '}' { printf("\nLABEL %s:\n", $4.else_body); } else { 
+	struct node *iff = mknode($4.nd, $8.nd, $1.name); 
+	$$.nd = mknode(iff, $11.nd, "if-else"); 
+	printf("GOTO next\n");
+}
 | statement ';' { $$.nd = $1.nd; }
 | body body { $$.nd = mknode($1.nd, $2.nd, "statements"); }
 | PRINTFF { add('K'); } '(' STR ')' ';' { $$.nd = mknode(NULL, NULL, "printf"); }
@@ -101,9 +105,9 @@ else: ELSE { add('K'); } '{' body '}' { $$.nd = mknode(NULL, $4.nd, $1.name); }
 
 condition: value relop value { 
 	$$.nd = mknode($1.nd, $3.nd, $2.name); 
-	printf("if %s %s %s GOTO L%d else GOTO L%d\n", $1.name, $2.name, $3.name, label, label+1);
-	sprintf($$.if_body, "L%d", 1);
-	sprintf($$.else_body, "L%d", 2);
+	printf("\nif %s %s %s GOTO L%d else GOTO L%d\n", $1.name, $2.name, $3.name, label, label+1);
+	sprintf($$.if_body, "L%d", label++);
+	sprintf($$.else_body, "L%d", label++);
 }
 | TRUE { add('K'); $$.nd = NULL; }
 | FALSE { add('K'); $$.nd = NULL; }
@@ -124,6 +128,7 @@ statement: datatype ID { add('V'); } init {
 	} else { 
 		$$.nd = mknode($2.nd, $4.nd, "declaration"); 
 	} 
+	printf("=\t %s\t %s\t\n", $2.name, $4.name);
 }
 | ID { check_declaration($1.name); } '=' expression {
 	$1.nd = mknode(NULL, NULL, $1.name); 
@@ -148,8 +153,8 @@ statement: datatype ID { add('V'); } init {
 | UNARY ID { check_declaration($2.name); $1.nd = mknode(NULL, NULL, $1.name); $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($1.nd, $2.nd, "ITERATOR"); }
 ;
 
-init: '=' value { $$.nd = $2.nd; sprintf($$.type, $2.type); }
-| { sprintf($$.type, "null"); $$.nd = mknode(NULL, NULL, "NULL"); }
+init: '=' value { $$.nd = $2.nd; sprintf($$.type, $2.type); strcpy($$.name, $2.name); }
+| { sprintf($$.type, "null"); $$.nd = mknode(NULL, NULL, "NULL"); strcpy($$.name, "NULL"); }
 ;
 
 expression: expression arithmetic expression { 
