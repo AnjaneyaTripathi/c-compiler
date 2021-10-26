@@ -6,27 +6,25 @@ int main() {
     int x=1;
     int y=2;
     int z=3;
-    int z;
-    char f=97;
     x=3;
     y=10;
     z=5;
-    if (x>5) {
+    if(x>5) {
         for(int k=0; k<10; k++) {
             y = x+3;
-            printf("Saddd");
+            printf("Hello!");
         }
     } else {
         int idx = 1;
     }
     for(int i=0; i<10; i++) {
-        printf("Hello World");
+        printf("Hello World!");
         scanf("%d", &x);
         if (x>5) {
             printf("Hi");
         }
         for(int j=0; j<z; j++) {
-            f=1;
+            a=1;
         }
     } 
     return 1;
