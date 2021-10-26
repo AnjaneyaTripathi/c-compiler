@@ -32,6 +32,8 @@
     extern int countn;
 	struct node *head;
 	int sem_errors=0;
+	int temp_var=0;
+	int label=0;
 
 	struct node { 
 		struct node *left; 
@@ -42,20 +44,28 @@
 %}
 
 %union { struct var_name { 
-		char name[100]; 
-		struct node* nd;
+			char name[100]; 
+			struct node* nd;
 		} nam;
 
 		struct var_name2 { 
-		char name[100]; 
-		struct node* nd;
-		char type[5];
+			char name[100]; 
+			struct node* nd;
+			char type[5];
 		} nam2; 
+
+		struct var_name3 {
+			char name[100];
+			struct node* nd;
+			char *if_body;
+			char *else_body;
+		} nam3;
 	} 
 %token VOID 
 %token <nam> PRINTFF SCANFF INT FLOAT CHAR FOR IF ELSE TRUE FALSE NUMBER FLOAT_NUM ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY INCLUDE RETURN 
-%type <nam> headers main body return datatype statement arithmetic relop program else condition
+%type <nam> headers main body return datatype statement arithmetic relop program else
 %type <nam2> init value expression
+%type <nam3> condition
 
 %%
 
@@ -89,7 +99,12 @@ else: ELSE { add('K'); } '{' body '}' { $$.nd = mknode(NULL, $4.nd, $1.name); }
 | { $$.nd = NULL; }
 ;
 
-condition: value relop value { $$.nd = mknode($1.nd, $3.nd, $2.name); }
+condition: value relop value { 
+	$$.nd = mknode($1.nd, $3.nd, $2.name); 
+	printf("if %s %s %s GOTO L%d else GOTO L%d\n", $1.name, $2.name, $3.name, label, label+1);
+	sprintf($$.if_body, "L%d", 1);
+	sprintf($$.else_body, "L%d", 2);
+}
 | TRUE { add('K'); $$.nd = NULL; }
 | FALSE { add('K'); $$.nd = NULL; }
 | { $$.nd = NULL; }
@@ -123,9 +138,10 @@ statement: datatype ID { add('V'); } init {
 			$$.nd = mknode($1.nd, temp, "="); 
 		}
 	}
-	else{
+	else {
 		$$.nd = mknode($1.nd, $4.nd, "="); 
 	}
+	printf("=\t %s\t %s\t\n", $1.name, $4.name);
 }
 | ID { check_declaration($1.name); } relop expression { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $4.nd, $3.name); }
 | ID { check_declaration($1.name); } UNARY { $1.nd = mknode(NULL, NULL, $1.name); $3.nd = mknode(NULL, NULL, $3.name); $$.nd = mknode($1.nd, $3.nd, "ITERATOR"); }
@@ -137,23 +153,26 @@ init: '=' value { $$.nd = $2.nd; sprintf($$.type, $2.type); }
 ;
 
 expression: expression arithmetic expression { 
-	if($1.type[0] == $3.type[0]){
+	if($1.type[0] == $3.type[0]) {
 		sprintf($$.type, $1.type);
 		$$.nd = mknode($1.nd, $3.nd, $2.name); 
 	}
-	else{
+	else {
 		sprintf($$.type, "float");
-		if($1.type[0] == 'i'){
+		if($1.type[0] == 'i') {
 			struct node *temp = mknode(NULL, $1.nd, "inttofloat");
 			$$.nd = mknode(temp, $3.nd, $2.name);
 		}
-		else{
+		else {
 			struct node *temp = mknode(NULL, $3.nd, "inttofloat");
 			$$.nd = mknode($1.nd, temp, $2.name);
 		}
 	}
+	sprintf($$.name, "t%d", temp_var);
+	temp_var++;
+	printf("%s\t %s\t %s\t %s\t\n", $2.name, $1.name, $3.name, $$.name);
 }
-| value { sprintf($$.type, $1.type); $$.nd = $1.nd; }
+| value { strcpy($$.name, $1.name); sprintf($$.type, $1.type); $$.nd = $1.nd; }
 ;
 
 arithmetic: ADD 
@@ -170,9 +189,9 @@ relop: LT
 | NE
 ;
 
-value: NUMBER { sprintf($$.type, "int"); add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
-| FLOAT_NUM { sprintf($$.type, "float"); add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
-| ID { char *id_type = get_type($1.name); sprintf($$.type, id_type); check_declaration($1.name); $$.nd = mknode(NULL, NULL, $1.name); }
+value: NUMBER { strcpy($$.name, $1.name); sprintf($$.type, "int"); add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
+| FLOAT_NUM { strcpy($$.name, $1.name); sprintf($$.type, "float"); add('C'); $$.nd = mknode(NULL, NULL, $1.name); }
+| ID { strcpy($$.name, $1.name); char *id_type = get_type($1.name); sprintf($$.type, id_type); check_declaration($1.name); $$.nd = mknode(NULL, NULL, $1.name); }
 ;
 
 return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, "return"); $$.nd = mknode($1.nd, $3.nd, "RETURN"); }
@@ -191,7 +210,7 @@ int main() {
 	for(i=0; i<count; i++) {
 		printf("%s\t%s\t%s\t%d\t\n", symbolTable[i].id_name, symbolTable[i].data_type, symbolTable[i].type, symbolTable[i].line_no);
 	}
-	for(i=0;i<count;i++){
+	for(i=0;i<count;i++) {
 		free(symbolTable[i].id_name);
 		free(symbolTable[i].type);
 	}
@@ -200,10 +219,10 @@ int main() {
 	printtree(head); 
 	printf("\n\n\n\n");
 	printf("\t\t\t\t\t\t\t\t PHASE 3: SEMANTIC ANALYSIS \n\n");
-	if(sem_errors>0){
+	if(sem_errors>0) {
 		printf("Semantic analysis completed with %d errors!", sem_errors);
-	}else{
-		printf("Semnatic analysis completed with no errors");
+	} else {
+		printf("Semantic analysis completed with no errors");
 	}
 	printf("\n\n");
 }
