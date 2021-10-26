@@ -24,6 +24,7 @@ unary "++"|"--"
 "true"                      { strcpy(yylval.nam.name,(yytext)); return TRUE; }
 "false"                     { strcpy(yylval.nam.name,(yytext)); return FALSE; }
 [-]?{digit}+                { strcpy(yylval.nam.name,(yytext)); return NUMBER; }
+[-]?{digit}+\.{digit}{1,6}  { strcpy(yylval.nam.name,(yytext)); return FLOAT_NUM; }
 {alpha}({alpha}|{digit})*   { strcpy(yylval.nam.name,(yytext)); return ID; }
 {unary}                     { strcpy(yylval.nam.name,(yytext)); return UNARY; }
 "<="                        { strcpy(yylval.nam.name,(yytext)); return LE; }
