@@ -67,7 +67,7 @@ int main() {
 
 ### Visualising the Parse Tree 
 
-![Symbol Table](/Images/tree.jpg)
+![Symbol Table](/Images/tree.png)
 
 ### Semantic Phase
 
