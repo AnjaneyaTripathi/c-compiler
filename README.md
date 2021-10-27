@@ -8,9 +8,11 @@ lex parser.l
 gcc -ll -w y.tab.c
 ```
 
-## What is Lex?
+## What is LEX?
 
-## What is Yacc?
+LEX is a tool used to generate a lexical analyzer. Technically, LEX translates a set of regular expression specifications into a C implementation of a corresponding finite state machine (lex.yy.c). This C program, when compiled, yields an executable lexical analyzer.
+
+## What is YACC?
 
 YACC (Yet Another Compiler Compiler) is a tool used to generate a parser. YACC translates a given Context Free Grammar (CFG) specifications into a C implementation (y.tab.c) of a corresponding push down automaton (i.e., a finite state machine with a stack). This C program when compiled, yields an executable parser.
 
