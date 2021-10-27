@@ -59,23 +59,23 @@ int main() {
 
 ### Symbol Table
 
-![Symbol Table](/images/table.png)
+![Symbol Table](/Images/table.png)
 
 ### Printing Parse Tree Inorder 
 
-![Symbol Table](/images/inorder.png)
+![Symbol Table](/Images/inorder.png)
 
 ### Visualising the Parse Tree 
 
-![Symbol Table](/images/tree.png)
+![Symbol Table](/Images/tree.png)
 
 ### Semantic Phase
 
-![Symbol Table](/images/semantic.png)
+![Symbol Table](/Images/semantic.png)
 
 ### Intermediate Code Generation
 
-![Symbol Table](/images/icg.png)
+![Symbol Table](/Images/icg.png)
 
 ## Development of the Compiler
 
