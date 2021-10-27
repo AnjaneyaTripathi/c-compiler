@@ -36,6 +36,7 @@
 	int label=0;
 	int is_for=0;
 	char buff[100];
+	char errors[10][100];
 
 	struct node { 
 		struct node *left; 
@@ -175,13 +176,10 @@ statement: datatype ID { add('V'); } init {
 	$$.nd = mknode($1.nd, $3.nd, "ITERATOR");  
 	if(!strcmp($3.name, "++")) {
 		sprintf(buff, "+\t %s\t 1\t t%d\n=\t %s\t t%d\n", $1.name, temp_var, $1.name, temp_var++);
-		//printf("+\t %s\t 1\t t%d\n", $1.name, temp_var);
 	}
 	else {
 		sprintf(buff, "-\t %s\t 1\t t%d\n=\t %s\t t%d\n", $1.name, temp_var, $1.name, temp_var++);
-		//printf("-\t %s\t 1\t t%d\n", $1.name, temp_var);
 	}
-	//printf("=\t %s\t t%d\n", $1.name, temp_var++);
 }
 | UNARY ID { 
 	check_declaration($2.name); 
@@ -190,13 +188,10 @@ statement: datatype ID { add('V'); } init {
 	$$.nd = mknode($1.nd, $2.nd, "ITERATOR"); 
 	if(!strcmp($1.name, "++")) {
 		sprintf(buff, "+\t %s\t 1\t t%d\n=\t %s\t t%d\n", $2.name, temp_var, $2.name, temp_var++);
-		//printf("+\t %s\t 1\t t%d\n", $2.name, temp_var);
 	}
 	else {
 		sprintf(buff, "-\t %s\t 1\t t%d\n=\t %s\t t%d\n", $2.name, temp_var, $2.name, temp_var++);
-		//printf("-\t %s\t 1\t t%d\n", $2.name, temp_var);
 	}
-	//printf("=\t %s\t t%d\n", $2.name, temp_var++);
 }
 ;
 
@@ -253,6 +248,7 @@ return: RETURN { add('K'); } value ';' { $1.nd = mknode(NULL, NULL, "return"); $
 %%
 
 int main() {
+	printf("\t\t\t\t\t\t\t\t PHASE 4: INTERMEDIATE CODE GENERATION \n\n");
     yyparse();
     printf("\n\n");
 	printf("\t\t\t\t\t\t\t\t PHASE 1: LEXICAL ANALYSIS \n\n");
@@ -272,7 +268,10 @@ int main() {
 	printf("\n\n\n\n");
 	printf("\t\t\t\t\t\t\t\t PHASE 3: SEMANTIC ANALYSIS \n\n");
 	if(sem_errors>0) {
-		printf("Semantic analysis completed with %d errors!", sem_errors);
+		printf("Semantic analysis completed with %d errors\n", sem_errors);
+		for(int i=0; i<sem_errors; i++){
+			printf("\t - %s", errors[i]);
+		}
 	} else {
 		printf("Semantic analysis completed with no errors");
 	}
@@ -293,9 +292,8 @@ int search(char *type) {
 void check_declaration(char *c) {
     q = search(c);
     if(!q) {
-        printf("ERROR: Line %d: Variable \"%s\" not declared before usage!\n", countn+1, c);
+        sprintf(errors[sem_errors], "Line %d: Variable \"%s\" not declared before usage!\n", countn+1, c);
 		sem_errors++;
-        //exit(0);
     }
 }
 
@@ -352,7 +350,7 @@ void add(char c) {
 		}
     }
     else if(c == 'V' && q) {
-        printf("ERROR: Line %d: Multiple declarations of \"%s\" not allowed!\n", countn+1, yytext);
+        sprintf(errors[sem_errors], "Line %d: Multiple declarations of \"%s\" not allowed!\n", countn+1, yytext);
 		sem_errors++;
     }
 }
