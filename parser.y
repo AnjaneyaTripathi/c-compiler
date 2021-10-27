@@ -15,6 +15,7 @@
 	void print_tree_util(struct node*, int);
 	void print_inorder(struct node *);
     void check_declaration(char *);
+	void check_return_type(char *);
 	int check_types(char *, char *);
 	char *get_type(char *);
 	struct node* mknode(struct node *left, struct node *right, char *token);
@@ -365,14 +366,16 @@ void check_declaration(char *c) {
     }
 }
 
-void check_return_type(char *value){
+void check_return_type(char *value) {
 	char *main_datatype = get_type("main");
 	char *return_datatype = get_type(value);
 	if((!strcmp(main_datatype, "int") && !strcmp(return_datatype, "CONST")) || !strcmp(main_datatype, return_datatype)){
-		return;
+		return ;
 	}
-	sprintf(errors[sem_errors], "Line %d: Return type mismatch\n", countn+1);
-	sem_errors++;
+	else {
+		sprintf(errors[sem_errors], "Line %d: Return type mismatch\n", countn+1);
+		sem_errors++;
+	}
 }
 
 int check_types(char *type1, char *type2){

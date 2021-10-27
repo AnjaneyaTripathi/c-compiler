@@ -1,7 +1,7 @@
-Terminals unused in grammar
+Terminals which are not used
 
-    AND
-    OR
+   AND
+   OR
 
 
 State 10 conflicts: 1 shift/reduce
@@ -17,9 +17,9 @@ Grammar
 
     2 headers: headers headers
 
-    3 $@1: %empty
+    3 @1: /* empty */
 
-    4 headers: INCLUDE $@1
+    4 headers: INCLUDE @1
 
     5 main: datatype ID
 
@@ -28,57 +28,57 @@ Grammar
     8         | CHAR
     9         | VOID
 
-   10 $@2: %empty
+   10 @2: /* empty */
 
-   11 body: FOR $@2 '(' statement ';' condition ';' statement ')' '{' body '}'
+   11 body: FOR @2 '(' statement ';' condition ';' statement ')' '{' body '}'
 
-   12 $@3: %empty
+   12 @3: /* empty */
 
-   13 $@4: %empty
+   13 @4: /* empty */
 
-   14 $@5: %empty
+   14 @5: /* empty */
 
-   15 body: IF $@3 '(' condition ')' $@4 '{' body '}' $@5 else
+   15 body: IF @3 '(' condition ')' @4 '{' body '}' @5 else
    16     | statement ';'
    17     | body body
 
-   18 $@6: %empty
+   18 @6: /* empty */
 
-   19 body: PRINTFF $@6 '(' STR ')' ';'
+   19 body: PRINTFF @6 '(' STR ')' ';'
 
-   20 $@7: %empty
+   20 @7: /* empty */
 
-   21 body: SCANFF $@7 '(' STR ',' '&' ID ')' ';'
+   21 body: SCANFF @7 '(' STR ',' '&' ID ')' ';'
 
-   22 $@8: %empty
+   22 @8: /* empty */
 
-   23 else: ELSE $@8 '{' body '}'
-   24     | %empty
+   23 else: ELSE @8 '{' body '}'
+   24     | /* empty */
 
    25 condition: value relop value
    26          | TRUE
    27          | FALSE
-   28          | %empty
+   28          | /* empty */
 
-   29 $@9: %empty
+   29 @9: /* empty */
 
-   30 statement: datatype ID $@9 init
+   30 statement: datatype ID @9 init
 
-   31 $@10: %empty
+   31 @10: /* empty */
 
-   32 statement: ID $@10 '=' expression
+   32 statement: ID @10 '=' expression
 
-   33 $@11: %empty
+   33 @11: /* empty */
 
-   34 statement: ID $@11 relop expression
+   34 statement: ID @11 relop expression
 
-   35 $@12: %empty
+   35 @12: /* empty */
 
-   36 statement: ID $@12 UNARY
+   36 statement: ID @12 UNARY
    37          | UNARY ID
 
    38 init: '=' value
-   39     | %empty
+   39     | /* empty */
 
    40 expression: expression arithmetic expression
    41           | value
@@ -100,145 +100,118 @@ Grammar
    54      | CHARACTER
    55      | ID
 
-   56 $@13: %empty
+   56 @13: /* empty */
 
-   57 return: RETURN $@13 value ';'
-   58       | %empty
+   57 return: RETURN @13 value ';'
+   58       | /* empty */
 
 
 Terminals, with rules where they appear
 
-    $end (0) 0
-    '&' (38) 21
-    '(' (40) 1 11 15 19 21
-    ')' (41) 1 11 15 19 21
-    ',' (44) 21
-    ';' (59) 11 16 19 21 57
-    '=' (61) 32 38
-    '{' (123) 1 11 15 23
-    '}' (125) 1 11 15 23
-    error (256)
-    VOID (258) 9
-    CHARACTER <nd_obj> (259) 54
-    PRINTFF <nd_obj> (260) 19
-    SCANFF <nd_obj> (261) 21
-    INT <nd_obj> (262) 6
-    FLOAT <nd_obj> (263) 7
-    CHAR <nd_obj> (264) 8
-    FOR <nd_obj> (265) 11
-    IF <nd_obj> (266) 15
-    ELSE <nd_obj> (267) 23
-    TRUE <nd_obj> (268) 26
-    FALSE <nd_obj> (269) 27
-    NUMBER <nd_obj> (270) 52
-    FLOAT_NUM <nd_obj> (271) 53
-    ID <nd_obj> (272) 5 21 30 32 34 36 37 55
-    LE <nd_obj> (273) 48
-    GE <nd_obj> (274) 49
-    EQ <nd_obj> (275) 50
-    NE <nd_obj> (276) 51
-    GT <nd_obj> (277) 47
-    LT <nd_obj> (278) 46
-    AND <nd_obj> (279)
-    OR <nd_obj> (280)
-    STR <nd_obj> (281) 19 21
-    ADD <nd_obj> (282) 42
-    MULTIPLY <nd_obj> (283) 44
-    DIVIDE <nd_obj> (284) 45
-    SUBTRACT <nd_obj> (285) 43
-    UNARY <nd_obj> (286) 36 37
-    INCLUDE <nd_obj> (287) 4
-    RETURN <nd_obj> (288) 57
+$end (0) 0
+'&' (38) 21
+'(' (40) 1 11 15 19 21
+')' (41) 1 11 15 19 21
+',' (44) 21
+';' (59) 11 16 19 21 57
+'=' (61) 32 38
+'{' (123) 1 11 15 23
+'}' (125) 1 11 15 23
+error (256)
+VOID (258) 9
+CHARACTER (259) 54
+PRINTFF (260) 19
+SCANFF (261) 21
+INT (262) 6
+FLOAT (263) 7
+CHAR (264) 8
+FOR (265) 11
+IF (266) 15
+ELSE (267) 23
+TRUE (268) 26
+FALSE (269) 27
+NUMBER (270) 52
+FLOAT_NUM (271) 53
+ID (272) 5 21 30 32 34 36 37 55
+LE (273) 48
+GE (274) 49
+EQ (275) 50
+NE (276) 51
+GT (277) 47
+LT (278) 46
+AND (279)
+OR (280)
+STR (281) 19 21
+ADD (282) 42
+MULTIPLY (283) 44
+DIVIDE (284) 45
+SUBTRACT (285) 43
+UNARY (286) 36 37
+INCLUDE (287) 4
+RETURN (288) 57
 
 
 Nonterminals, with rules where they appear
 
-    $accept (42)
-        on left: 0
-    program <nd_obj> (43)
-        on left: 1
-        on right: 0
-    headers <nd_obj> (44)
-        on left: 2 4
-        on right: 1 2
-    $@1 (45)
-        on left: 3
-        on right: 4
-    main <nd_obj> (46)
-        on left: 5
-        on right: 1
-    datatype <nd_obj> (47)
-        on left: 6 7 8 9
-        on right: 5 30
-    body <nd_obj> (48)
-        on left: 11 15 16 17 19 21
-        on right: 1 11 15 17 23
-    $@2 (49)
-        on left: 10
-        on right: 11
-    $@3 (50)
-        on left: 12
-        on right: 15
-    $@4 (51)
-        on left: 13
-        on right: 15
-    $@5 (52)
-        on left: 14
-        on right: 15
-    $@6 (53)
-        on left: 18
-        on right: 19
-    $@7 (54)
-        on left: 20
-        on right: 21
-    else <nd_obj> (55)
-        on left: 23 24
-        on right: 15
-    $@8 (56)
-        on left: 22
-        on right: 23
-    condition <nd_obj3> (57)
-        on left: 25 26 27 28
-        on right: 11 15
-    statement <nd_obj> (58)
-        on left: 30 32 34 36 37
-        on right: 11 16
-    $@9 (59)
-        on left: 29
-        on right: 30
-    $@10 (60)
-        on left: 31
-        on right: 32
-    $@11 (61)
-        on left: 33
-        on right: 34
-    $@12 (62)
-        on left: 35
-        on right: 36
-    init <nd_obj2> (63)
-        on left: 38 39
-        on right: 30
-    expression <nd_obj2> (64)
-        on left: 40 41
-        on right: 32 34 40
-    arithmetic <nd_obj> (65)
-        on left: 42 43 44 45
-        on right: 40
-    relop <nd_obj> (66)
-        on left: 46 47 48 49 50 51
-        on right: 25 34
-    value <nd_obj2> (67)
-        on left: 52 53 54 55
-        on right: 25 38 41 57
-    return <nd_obj> (68)
-        on left: 57 58
-        on right: 1
-    $@13 (69)
-        on left: 56
-        on right: 57
+$accept (42)
+    on left: 0
+program (43)
+    on left: 1, on right: 0
+headers (44)
+    on left: 2 4, on right: 1 2
+@1 (45)
+    on left: 3, on right: 4
+main (46)
+    on left: 5, on right: 1
+datatype (47)
+    on left: 6 7 8 9, on right: 5 30
+body (48)
+    on left: 11 15 16 17 19 21, on right: 1 11 15 17 23
+@2 (49)
+    on left: 10, on right: 11
+@3 (50)
+    on left: 12, on right: 15
+@4 (51)
+    on left: 13, on right: 15
+@5 (52)
+    on left: 14, on right: 15
+@6 (53)
+    on left: 18, on right: 19
+@7 (54)
+    on left: 20, on right: 21
+else (55)
+    on left: 23 24, on right: 15
+@8 (56)
+    on left: 22, on right: 23
+condition (57)
+    on left: 25 26 27 28, on right: 11 15
+statement (58)
+    on left: 30 32 34 36 37, on right: 11 16
+@9 (59)
+    on left: 29, on right: 30
+@10 (60)
+    on left: 31, on right: 32
+@11 (61)
+    on left: 33, on right: 34
+@12 (62)
+    on left: 35, on right: 36
+init (63)
+    on left: 38 39, on right: 30
+expression (64)
+    on left: 40 41, on right: 32 34 40
+arithmetic (65)
+    on left: 42 43 44 45, on right: 40
+relop (66)
+    on left: 46 47 48 49 50 51, on right: 25 34
+value (67)
+    on left: 52 53 54 55, on right: 25 38 41 57
+return (68)
+    on left: 57 58, on right: 1
+@13 (69)
+    on left: 56, on right: 57
 
 
-State 0
+state 0
 
     0 $accept: . program $end
 
@@ -248,23 +221,23 @@ State 0
     headers  go to state 3
 
 
-State 1
+state 1
 
-    4 headers: INCLUDE . $@1
+    4 headers: INCLUDE . @1
 
-    $default  reduce using rule 3 ($@1)
+    $default  reduce using rule 3 (@1)
 
-    $@1  go to state 4
+    @1  go to state 4
 
 
-State 2
+state 2
 
     0 $accept: program . $end
 
     $end  shift, and go to state 5
 
 
-State 3
+state 3
 
     1 program: headers . main '(' ')' '{' body return '}'
     2 headers: headers . headers
@@ -280,49 +253,49 @@ State 3
     datatype  go to state 12
 
 
-State 4
+state 4
 
-    4 headers: INCLUDE $@1 .
+    4 headers: INCLUDE @1 .
 
     $default  reduce using rule 4 (headers)
 
 
-State 5
+state 5
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 6
+state 6
 
     9 datatype: VOID .
 
     $default  reduce using rule 9 (datatype)
 
 
-State 7
+state 7
 
     6 datatype: INT .
 
     $default  reduce using rule 6 (datatype)
 
 
-State 8
+state 8
 
     7 datatype: FLOAT .
 
     $default  reduce using rule 7 (datatype)
 
 
-State 9
+state 9
 
     8 datatype: CHAR .
 
     $default  reduce using rule 8 (datatype)
 
 
-State 10
+state 10
 
     2 headers: headers . headers
     2        | headers headers .
@@ -335,42 +308,42 @@ State 10
     headers  go to state 10
 
 
-State 11
+state 11
 
     1 program: headers main . '(' ')' '{' body return '}'
 
     '('  shift, and go to state 13
 
 
-State 12
+state 12
 
     5 main: datatype . ID
 
     ID  shift, and go to state 14
 
 
-State 13
+state 13
 
     1 program: headers main '(' . ')' '{' body return '}'
 
     ')'  shift, and go to state 15
 
 
-State 14
+state 14
 
     5 main: datatype ID .
 
     $default  reduce using rule 5 (main)
 
 
-State 15
+state 15
 
     1 program: headers main '(' ')' . '{' body return '}'
 
     '{'  shift, and go to state 16
 
 
-State 16
+state 16
 
     1 program: headers main '(' ')' '{' . body return '}'
 
@@ -390,72 +363,72 @@ State 16
     statement  go to state 25
 
 
-State 17
+state 17
 
-   19 body: PRINTFF . $@6 '(' STR ')' ';'
+   19 body: PRINTFF . @6 '(' STR ')' ';'
 
-    $default  reduce using rule 18 ($@6)
+    $default  reduce using rule 18 (@6)
 
-    $@6  go to state 26
-
-
-State 18
-
-   21 body: SCANFF . $@7 '(' STR ',' '&' ID ')' ';'
-
-    $default  reduce using rule 20 ($@7)
-
-    $@7  go to state 27
+    @6  go to state 26
 
 
-State 19
+state 18
 
-   11 body: FOR . $@2 '(' statement ';' condition ';' statement ')' '{' body '}'
+   21 body: SCANFF . @7 '(' STR ',' '&' ID ')' ';'
 
-    $default  reduce using rule 10 ($@2)
+    $default  reduce using rule 20 (@7)
 
-    $@2  go to state 28
-
-
-State 20
-
-   15 body: IF . $@3 '(' condition ')' $@4 '{' body '}' $@5 else
-
-    $default  reduce using rule 12 ($@3)
-
-    $@3  go to state 29
+    @7  go to state 27
 
 
-State 21
+state 19
 
-   32 statement: ID . $@10 '=' expression
-   34          | ID . $@11 relop expression
-   36          | ID . $@12 UNARY
+   11 body: FOR . @2 '(' statement ';' condition ';' statement ')' '{' body '}'
 
-    UNARY     reduce using rule 35 ($@12)
-    '='       reduce using rule 31 ($@10)
-    $default  reduce using rule 33 ($@11)
+    $default  reduce using rule 10 (@2)
 
-    $@10  go to state 30
-    $@11  go to state 31
-    $@12  go to state 32
+    @2  go to state 28
 
 
-State 22
+state 20
+
+   15 body: IF . @3 '(' condition ')' @4 '{' body '}' @5 else
+
+    $default  reduce using rule 12 (@3)
+
+    @3  go to state 29
+
+
+state 21
+
+   32 statement: ID . @10 '=' expression
+   34          | ID . @11 relop expression
+   36          | ID . @12 UNARY
+
+    UNARY     reduce using rule 35 (@12)
+    '='       reduce using rule 31 (@10)
+    $default  reduce using rule 33 (@11)
+
+    @10  go to state 30
+    @11  go to state 31
+    @12  go to state 32
+
+
+state 22
 
    37 statement: UNARY . ID
 
     ID  shift, and go to state 33
 
 
-State 23
+state 23
 
-   30 statement: datatype . ID $@9 init
+   30 statement: datatype . ID @9 init
 
     ID  shift, and go to state 34
 
 
-State 24
+state 24
 
     1 program: headers main '(' ')' '{' body . return '}'
    17 body: body . body
@@ -480,51 +453,51 @@ State 24
     return     go to state 37
 
 
-State 25
+state 25
 
    16 body: statement . ';'
 
     ';'  shift, and go to state 38
 
 
-State 26
+state 26
 
-   19 body: PRINTFF $@6 . '(' STR ')' ';'
+   19 body: PRINTFF @6 . '(' STR ')' ';'
 
     '('  shift, and go to state 39
 
 
-State 27
+state 27
 
-   21 body: SCANFF $@7 . '(' STR ',' '&' ID ')' ';'
+   21 body: SCANFF @7 . '(' STR ',' '&' ID ')' ';'
 
     '('  shift, and go to state 40
 
 
-State 28
+state 28
 
-   11 body: FOR $@2 . '(' statement ';' condition ';' statement ')' '{' body '}'
+   11 body: FOR @2 . '(' statement ';' condition ';' statement ')' '{' body '}'
 
     '('  shift, and go to state 41
 
 
-State 29
+state 29
 
-   15 body: IF $@3 . '(' condition ')' $@4 '{' body '}' $@5 else
+   15 body: IF @3 . '(' condition ')' @4 '{' body '}' @5 else
 
     '('  shift, and go to state 42
 
 
-State 30
+state 30
 
-   32 statement: ID $@10 . '=' expression
+   32 statement: ID @10 . '=' expression
 
     '='  shift, and go to state 43
 
 
-State 31
+state 31
 
-   34 statement: ID $@11 . relop expression
+   34 statement: ID @11 . relop expression
 
     LE  shift, and go to state 44
     GE  shift, and go to state 45
@@ -536,39 +509,39 @@ State 31
     relop  go to state 50
 
 
-State 32
+state 32
 
-   36 statement: ID $@12 . UNARY
+   36 statement: ID @12 . UNARY
 
     UNARY  shift, and go to state 51
 
 
-State 33
+state 33
 
    37 statement: UNARY ID .
 
     $default  reduce using rule 37 (statement)
 
 
-State 34
+state 34
 
-   30 statement: datatype ID . $@9 init
+   30 statement: datatype ID . @9 init
 
-    $default  reduce using rule 29 ($@9)
+    $default  reduce using rule 29 (@9)
 
-    $@9  go to state 52
-
-
-State 35
-
-   57 return: RETURN . $@13 value ';'
-
-    $default  reduce using rule 56 ($@13)
-
-    $@13  go to state 53
+    @9  go to state 52
 
 
-State 36
+state 35
+
+   57 return: RETURN . @13 value ';'
+
+    $default  reduce using rule 56 (@13)
+
+    @13  go to state 53
+
+
+state 36
 
    17 body: body . body
    17     | body body .
@@ -601,37 +574,37 @@ State 36
     statement  go to state 25
 
 
-State 37
+state 37
 
     1 program: headers main '(' ')' '{' body return . '}'
 
     '}'  shift, and go to state 54
 
 
-State 38
+state 38
 
    16 body: statement ';' .
 
     $default  reduce using rule 16 (body)
 
 
-State 39
+state 39
 
-   19 body: PRINTFF $@6 '(' . STR ')' ';'
+   19 body: PRINTFF @6 '(' . STR ')' ';'
 
     STR  shift, and go to state 55
 
 
-State 40
+state 40
 
-   21 body: SCANFF $@7 '(' . STR ',' '&' ID ')' ';'
+   21 body: SCANFF @7 '(' . STR ',' '&' ID ')' ';'
 
     STR  shift, and go to state 56
 
 
-State 41
+state 41
 
-   11 body: FOR $@2 '(' . statement ';' condition ';' statement ')' '{' body '}'
+   11 body: FOR @2 '(' . statement ';' condition ';' statement ')' '{' body '}'
 
     VOID   shift, and go to state 6
     INT    shift, and go to state 7
@@ -644,9 +617,9 @@ State 41
     statement  go to state 57
 
 
-State 42
+state 42
 
-   15 body: IF $@3 '(' . condition ')' $@4 '{' body '}' $@5 else
+   15 body: IF @3 '(' . condition ')' @4 '{' body '}' @5 else
 
     CHARACTER  shift, and go to state 58
     TRUE       shift, and go to state 59
@@ -661,9 +634,9 @@ State 42
     value      go to state 65
 
 
-State 43
+state 43
 
-   32 statement: ID $@10 '=' . expression
+   32 statement: ID @10 '=' . expression
 
     CHARACTER  shift, and go to state 58
     NUMBER     shift, and go to state 61
@@ -674,51 +647,51 @@ State 43
     value       go to state 67
 
 
-State 44
+state 44
 
    48 relop: LE .
 
     $default  reduce using rule 48 (relop)
 
 
-State 45
+state 45
 
    49 relop: GE .
 
     $default  reduce using rule 49 (relop)
 
 
-State 46
+state 46
 
    50 relop: EQ .
 
     $default  reduce using rule 50 (relop)
 
 
-State 47
+state 47
 
    51 relop: NE .
 
     $default  reduce using rule 51 (relop)
 
 
-State 48
+state 48
 
    47 relop: GT .
 
     $default  reduce using rule 47 (relop)
 
 
-State 49
+state 49
 
    46 relop: LT .
 
     $default  reduce using rule 46 (relop)
 
 
-State 50
+state 50
 
-   34 statement: ID $@11 relop . expression
+   34 statement: ID @11 relop . expression
 
     CHARACTER  shift, and go to state 58
     NUMBER     shift, and go to state 61
@@ -729,16 +702,16 @@ State 50
     value       go to state 67
 
 
-State 51
+state 51
 
-   36 statement: ID $@12 UNARY .
+   36 statement: ID @12 UNARY .
 
     $default  reduce using rule 36 (statement)
 
 
-State 52
+state 52
 
-   30 statement: datatype ID $@9 . init
+   30 statement: datatype ID @9 . init
 
     '='  shift, and go to state 69
 
@@ -747,9 +720,9 @@ State 52
     init  go to state 70
 
 
-State 53
+state 53
 
-   57 return: RETURN $@13 . value ';'
+   57 return: RETURN @13 . value ';'
 
     CHARACTER  shift, and go to state 58
     NUMBER     shift, and go to state 61
@@ -759,84 +732,84 @@ State 53
     value  go to state 71
 
 
-State 54
+state 54
 
     1 program: headers main '(' ')' '{' body return '}' .
 
     $default  reduce using rule 1 (program)
 
 
-State 55
+state 55
 
-   19 body: PRINTFF $@6 '(' STR . ')' ';'
+   19 body: PRINTFF @6 '(' STR . ')' ';'
 
     ')'  shift, and go to state 72
 
 
-State 56
+state 56
 
-   21 body: SCANFF $@7 '(' STR . ',' '&' ID ')' ';'
+   21 body: SCANFF @7 '(' STR . ',' '&' ID ')' ';'
 
     ','  shift, and go to state 73
 
 
-State 57
+state 57
 
-   11 body: FOR $@2 '(' statement . ';' condition ';' statement ')' '{' body '}'
+   11 body: FOR @2 '(' statement . ';' condition ';' statement ')' '{' body '}'
 
     ';'  shift, and go to state 74
 
 
-State 58
+state 58
 
    54 value: CHARACTER .
 
     $default  reduce using rule 54 (value)
 
 
-State 59
+state 59
 
    26 condition: TRUE .
 
     $default  reduce using rule 26 (condition)
 
 
-State 60
+state 60
 
    27 condition: FALSE .
 
     $default  reduce using rule 27 (condition)
 
 
-State 61
+state 61
 
    52 value: NUMBER .
 
     $default  reduce using rule 52 (value)
 
 
-State 62
+state 62
 
    53 value: FLOAT_NUM .
 
     $default  reduce using rule 53 (value)
 
 
-State 63
+state 63
 
    55 value: ID .
 
     $default  reduce using rule 55 (value)
 
 
-State 64
+state 64
 
-   15 body: IF $@3 '(' condition . ')' $@4 '{' body '}' $@5 else
+   15 body: IF @3 '(' condition . ')' @4 '{' body '}' @5 else
 
     ')'  shift, and go to state 75
 
 
-State 65
+state 65
 
    25 condition: value . relop value
 
@@ -850,9 +823,9 @@ State 65
     relop  go to state 76
 
 
-State 66
+state 66
 
-   32 statement: ID $@10 '=' expression .
+   32 statement: ID @10 '=' expression .
    40 expression: expression . arithmetic expression
 
     ADD       shift, and go to state 77
@@ -865,16 +838,16 @@ State 66
     arithmetic  go to state 81
 
 
-State 67
+state 67
 
    41 expression: value .
 
     $default  reduce using rule 41 (expression)
 
 
-State 68
+state 68
 
-   34 statement: ID $@11 relop expression .
+   34 statement: ID @11 relop expression .
    40 expression: expression . arithmetic expression
 
     ADD       shift, and go to state 77
@@ -887,7 +860,7 @@ State 68
     arithmetic  go to state 81
 
 
-State 69
+state 69
 
    38 init: '=' . value
 
@@ -899,37 +872,37 @@ State 69
     value  go to state 82
 
 
-State 70
+state 70
 
-   30 statement: datatype ID $@9 init .
+   30 statement: datatype ID @9 init .
 
     $default  reduce using rule 30 (statement)
 
 
-State 71
+state 71
 
-   57 return: RETURN $@13 value . ';'
+   57 return: RETURN @13 value . ';'
 
     ';'  shift, and go to state 83
 
 
-State 72
+state 72
 
-   19 body: PRINTFF $@6 '(' STR ')' . ';'
+   19 body: PRINTFF @6 '(' STR ')' . ';'
 
     ';'  shift, and go to state 84
 
 
-State 73
+state 73
 
-   21 body: SCANFF $@7 '(' STR ',' . '&' ID ')' ';'
+   21 body: SCANFF @7 '(' STR ',' . '&' ID ')' ';'
 
     '&'  shift, and go to state 85
 
 
-State 74
+state 74
 
-   11 body: FOR $@2 '(' statement ';' . condition ';' statement ')' '{' body '}'
+   11 body: FOR @2 '(' statement ';' . condition ';' statement ')' '{' body '}'
 
     CHARACTER  shift, and go to state 58
     TRUE       shift, and go to state 59
@@ -944,16 +917,16 @@ State 74
     value      go to state 65
 
 
-State 75
+state 75
 
-   15 body: IF $@3 '(' condition ')' . $@4 '{' body '}' $@5 else
+   15 body: IF @3 '(' condition ')' . @4 '{' body '}' @5 else
 
-    $default  reduce using rule 13 ($@4)
+    $default  reduce using rule 13 (@4)
 
-    $@4  go to state 87
+    @4  go to state 87
 
 
-State 76
+state 76
 
    25 condition: value relop . value
 
@@ -965,35 +938,35 @@ State 76
     value  go to state 88
 
 
-State 77
+state 77
 
    42 arithmetic: ADD .
 
     $default  reduce using rule 42 (arithmetic)
 
 
-State 78
+state 78
 
    44 arithmetic: MULTIPLY .
 
     $default  reduce using rule 44 (arithmetic)
 
 
-State 79
+state 79
 
    45 arithmetic: DIVIDE .
 
     $default  reduce using rule 45 (arithmetic)
 
 
-State 80
+state 80
 
    43 arithmetic: SUBTRACT .
 
     $default  reduce using rule 43 (arithmetic)
 
 
-State 81
+state 81
 
    40 expression: expression arithmetic . expression
 
@@ -1006,56 +979,56 @@ State 81
     value       go to state 67
 
 
-State 82
+state 82
 
    38 init: '=' value .
 
     $default  reduce using rule 38 (init)
 
 
-State 83
+state 83
 
-   57 return: RETURN $@13 value ';' .
+   57 return: RETURN @13 value ';' .
 
     $default  reduce using rule 57 (return)
 
 
-State 84
+state 84
 
-   19 body: PRINTFF $@6 '(' STR ')' ';' .
+   19 body: PRINTFF @6 '(' STR ')' ';' .
 
     $default  reduce using rule 19 (body)
 
 
-State 85
+state 85
 
-   21 body: SCANFF $@7 '(' STR ',' '&' . ID ')' ';'
+   21 body: SCANFF @7 '(' STR ',' '&' . ID ')' ';'
 
     ID  shift, and go to state 90
 
 
-State 86
+state 86
 
-   11 body: FOR $@2 '(' statement ';' condition . ';' statement ')' '{' body '}'
+   11 body: FOR @2 '(' statement ';' condition . ';' statement ')' '{' body '}'
 
     ';'  shift, and go to state 91
 
 
-State 87
+state 87
 
-   15 body: IF $@3 '(' condition ')' $@4 . '{' body '}' $@5 else
+   15 body: IF @3 '(' condition ')' @4 . '{' body '}' @5 else
 
     '{'  shift, and go to state 92
 
 
-State 88
+state 88
 
    25 condition: value relop value .
 
     $default  reduce using rule 25 (condition)
 
 
-State 89
+state 89
 
    40 expression: expression . arithmetic expression
    40           | expression arithmetic expression .
@@ -1074,16 +1047,16 @@ State 89
     arithmetic  go to state 81
 
 
-State 90
+state 90
 
-   21 body: SCANFF $@7 '(' STR ',' '&' ID . ')' ';'
+   21 body: SCANFF @7 '(' STR ',' '&' ID . ')' ';'
 
     ')'  shift, and go to state 93
 
 
-State 91
+state 91
 
-   11 body: FOR $@2 '(' statement ';' condition ';' . statement ')' '{' body '}'
+   11 body: FOR @2 '(' statement ';' condition ';' . statement ')' '{' body '}'
 
     VOID   shift, and go to state 6
     INT    shift, and go to state 7
@@ -1096,9 +1069,9 @@ State 91
     statement  go to state 94
 
 
-State 92
+state 92
 
-   15 body: IF $@3 '(' condition ')' $@4 '{' . body '}' $@5 else
+   15 body: IF @3 '(' condition ')' @4 '{' . body '}' @5 else
 
     VOID     shift, and go to state 6
     PRINTFF  shift, and go to state 17
@@ -1116,23 +1089,23 @@ State 92
     statement  go to state 25
 
 
-State 93
+state 93
 
-   21 body: SCANFF $@7 '(' STR ',' '&' ID ')' . ';'
+   21 body: SCANFF @7 '(' STR ',' '&' ID ')' . ';'
 
     ';'  shift, and go to state 96
 
 
-State 94
+state 94
 
-   11 body: FOR $@2 '(' statement ';' condition ';' statement . ')' '{' body '}'
+   11 body: FOR @2 '(' statement ';' condition ';' statement . ')' '{' body '}'
 
     ')'  shift, and go to state 97
 
 
-State 95
+state 95
 
-   15 body: IF $@3 '(' condition ')' $@4 '{' body . '}' $@5 else
+   15 body: IF @3 '(' condition ')' @4 '{' body . '}' @5 else
    17     | body . body
 
     VOID     shift, and go to state 6
@@ -1152,32 +1125,32 @@ State 95
     statement  go to state 25
 
 
-State 96
+state 96
 
-   21 body: SCANFF $@7 '(' STR ',' '&' ID ')' ';' .
+   21 body: SCANFF @7 '(' STR ',' '&' ID ')' ';' .
 
     $default  reduce using rule 21 (body)
 
 
-State 97
+state 97
 
-   11 body: FOR $@2 '(' statement ';' condition ';' statement ')' . '{' body '}'
+   11 body: FOR @2 '(' statement ';' condition ';' statement ')' . '{' body '}'
 
     '{'  shift, and go to state 99
 
 
-State 98
+state 98
 
-   15 body: IF $@3 '(' condition ')' $@4 '{' body '}' . $@5 else
+   15 body: IF @3 '(' condition ')' @4 '{' body '}' . @5 else
 
-    $default  reduce using rule 14 ($@5)
+    $default  reduce using rule 14 (@5)
 
-    $@5  go to state 100
+    @5  go to state 100
 
 
-State 99
+state 99
 
-   11 body: FOR $@2 '(' statement ';' condition ';' statement ')' '{' . body '}'
+   11 body: FOR @2 '(' statement ';' condition ';' statement ')' '{' . body '}'
 
     VOID     shift, and go to state 6
     PRINTFF  shift, and go to state 17
@@ -1195,9 +1168,9 @@ State 99
     statement  go to state 25
 
 
-State 100
+state 100
 
-   15 body: IF $@3 '(' condition ')' $@4 '{' body '}' $@5 . else
+   15 body: IF @3 '(' condition ')' @4 '{' body '}' @5 . else
 
     ELSE  shift, and go to state 102
 
@@ -1206,9 +1179,9 @@ State 100
     else  go to state 103
 
 
-State 101
+state 101
 
-   11 body: FOR $@2 '(' statement ';' condition ';' statement ')' '{' body . '}'
+   11 body: FOR @2 '(' statement ';' condition ';' statement ')' '{' body . '}'
    17     | body . body
 
     VOID     shift, and go to state 6
@@ -1228,39 +1201,39 @@ State 101
     statement  go to state 25
 
 
-State 102
+state 102
 
-   23 else: ELSE . $@8 '{' body '}'
+   23 else: ELSE . @8 '{' body '}'
 
-    $default  reduce using rule 22 ($@8)
+    $default  reduce using rule 22 (@8)
 
-    $@8  go to state 105
+    @8  go to state 105
 
 
-State 103
+state 103
 
-   15 body: IF $@3 '(' condition ')' $@4 '{' body '}' $@5 else .
+   15 body: IF @3 '(' condition ')' @4 '{' body '}' @5 else .
 
     $default  reduce using rule 15 (body)
 
 
-State 104
+state 104
 
-   11 body: FOR $@2 '(' statement ';' condition ';' statement ')' '{' body '}' .
+   11 body: FOR @2 '(' statement ';' condition ';' statement ')' '{' body '}' .
 
     $default  reduce using rule 11 (body)
 
 
-State 105
+state 105
 
-   23 else: ELSE $@8 . '{' body '}'
+   23 else: ELSE @8 . '{' body '}'
 
     '{'  shift, and go to state 106
 
 
-State 106
+state 106
 
-   23 else: ELSE $@8 '{' . body '}'
+   23 else: ELSE @8 '{' . body '}'
 
     VOID     shift, and go to state 6
     PRINTFF  shift, and go to state 17
@@ -1278,10 +1251,10 @@ State 106
     statement  go to state 25
 
 
-State 107
+state 107
 
    17 body: body . body
-   23 else: ELSE $@8 '{' body . '}'
+   23 else: ELSE @8 '{' body . '}'
 
     VOID     shift, and go to state 6
     PRINTFF  shift, and go to state 17
@@ -1300,8 +1273,8 @@ State 107
     statement  go to state 25
 
 
-State 108
+state 108
 
-   23 else: ELSE $@8 '{' body '}' .
+   23 else: ELSE @8 '{' body '}' .
 
     $default  reduce using rule 23 (else)
