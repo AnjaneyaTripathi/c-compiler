@@ -50,94 +50,96 @@ extern int yydebug;
   enum yytokentype
   {
     VOID = 258,
-    PRINTFF = 259,
-    SCANFF = 260,
-    INT = 261,
-    FLOAT = 262,
-    CHAR = 263,
-    FOR = 264,
-    IF = 265,
-    ELSE = 266,
-    TRUE = 267,
-    FALSE = 268,
-    NUMBER = 269,
-    FLOAT_NUM = 270,
-    ID = 271,
-    LE = 272,
-    GE = 273,
-    EQ = 274,
-    NE = 275,
-    GT = 276,
-    LT = 277,
-    AND = 278,
-    OR = 279,
-    STR = 280,
-    ADD = 281,
-    MULTIPLY = 282,
-    DIVIDE = 283,
-    SUBTRACT = 284,
-    UNARY = 285,
-    INCLUDE = 286,
-    RETURN = 287
+    CHARACTER = 259,
+    PRINTFF = 260,
+    SCANFF = 261,
+    INT = 262,
+    FLOAT = 263,
+    CHAR = 264,
+    FOR = 265,
+    IF = 266,
+    ELSE = 267,
+    TRUE = 268,
+    FALSE = 269,
+    NUMBER = 270,
+    FLOAT_NUM = 271,
+    ID = 272,
+    LE = 273,
+    GE = 274,
+    EQ = 275,
+    NE = 276,
+    GT = 277,
+    LT = 278,
+    AND = 279,
+    OR = 280,
+    STR = 281,
+    ADD = 282,
+    MULTIPLY = 283,
+    DIVIDE = 284,
+    SUBTRACT = 285,
+    UNARY = 286,
+    INCLUDE = 287,
+    RETURN = 288
   };
 #endif
 /* Tokens.  */
 #define VOID 258
-#define PRINTFF 259
-#define SCANFF 260
-#define INT 261
-#define FLOAT 262
-#define CHAR 263
-#define FOR 264
-#define IF 265
-#define ELSE 266
-#define TRUE 267
-#define FALSE 268
-#define NUMBER 269
-#define FLOAT_NUM 270
-#define ID 271
-#define LE 272
-#define GE 273
-#define EQ 274
-#define NE 275
-#define GT 276
-#define LT 277
-#define AND 278
-#define OR 279
-#define STR 280
-#define ADD 281
-#define MULTIPLY 282
-#define DIVIDE 283
-#define SUBTRACT 284
-#define UNARY 285
-#define INCLUDE 286
-#define RETURN 287
+#define CHARACTER 259
+#define PRINTFF 260
+#define SCANFF 261
+#define INT 262
+#define FLOAT 263
+#define CHAR 264
+#define FOR 265
+#define IF 266
+#define ELSE 267
+#define TRUE 268
+#define FALSE 269
+#define NUMBER 270
+#define FLOAT_NUM 271
+#define ID 272
+#define LE 273
+#define GE 274
+#define EQ 275
+#define NE 276
+#define GT 277
+#define LT 278
+#define AND 279
+#define OR 280
+#define STR 281
+#define ADD 282
+#define MULTIPLY 283
+#define DIVIDE 284
+#define SUBTRACT 285
+#define UNARY 286
+#define INCLUDE 287
+#define RETURN 288
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 49 "parser.y"
+#line 52 "parser.y"
  struct var_name { 
 			char name[100]; 
 			struct node* nd;
-		} nam;
+		} nd_obj;
 
 		struct var_name2 { 
 			char name[100]; 
 			struct node* nd;
 			char type[5];
-		} nam2; 
+		} nd_obj2; 
 
 		struct var_name3 {
 			char name[100];
 			struct node* nd;
 			char if_body[5];
 			char else_body[5];
-		} nam3;
+		} nd_obj3;
 	
 
-#line 141 "y.tab.h"
+#line 143 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

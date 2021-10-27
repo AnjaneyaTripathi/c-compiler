@@ -2,13 +2,10 @@
 #include<string.h>
 
 int main() {
-    int a;
-    int x=1;
-    for(int i=0; i<10; i++) {
-        printf("Hello World");
-        x = a + 3;
-    } 
-    int y=9;
-    y=a+1;
-    return 1;
+    int i=1;
+    float f = 2.5;
+    char c = 'A';
+    int x = 3.5;
+    i = f*c + x;
+    return 3.5;
 }
