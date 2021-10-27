@@ -1,1 +1,6 @@
 .DS_Store
+y.tab.c
+y.output
+y.tab.h
+lex.yy.c
+a.out
