@@ -16,6 +16,8 @@ LEX is a tool used to generate a lexical analyzer. The input is a set of regular
 
 YACC (Yet Another Compiler Compiler) is a tool used to generate a parser. It parses the input file and does semantic analysis on the stream of tokens produced by the LEX file. YACC translates a given Context Free Grammar (CFG) specifications into a C implementation y.tab.c. This C program when compiled, yields an executable parser.
 
+Check out this amazing tutorial on YouTube by [Jonathan Engelsma.](https://www.youtube.com/watch?v=54bo1qaHAfk)
+
 ## Features of the Compiler
 
 - Symbol Table
