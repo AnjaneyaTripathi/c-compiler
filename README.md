@@ -10,11 +10,11 @@ gcc -ll -w y.tab.c
 
 ## What is LEX?
 
-LEX is a tool used to generate a lexical analyzer. Technically, LEX translates a set of regular expression specifications into a C implementation of a corresponding finite state machine (lex.yy.c). This C program, when compiled, yields an executable lexical analyzer.
+LEX is a tool used to generate a lexical analyzer. The input is a set of regular expressions in addition to actions. The output is a table driven scanner called lex.yy.c.
 
 ## What is YACC?
 
-YACC (Yet Another Compiler Compiler) is a tool used to generate a parser. YACC translates a given Context Free Grammar (CFG) specifications into a C implementation (y.tab.c) of a corresponding push down automaton (i.e., a finite state machine with a stack). This C program when compiled, yields an executable parser.
+YACC (Yet Another Compiler Compiler) is a tool used to generate a parser. It parses the input file and does semantic analysis on the stream of tokens produced by the LEX file. YACC translates a given Context Free Grammar (CFG) specifications into a C implementation y.tab.c. This C program when compiled, yields an executable parser.
 
 ## Features of the Compiler
 
