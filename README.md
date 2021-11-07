@@ -3,7 +3,7 @@
 ## Using the Compiler
 
 ```
-yacc -d -v parser.y
+yacc -d -v lexer.y
 lex parser.l
 gcc -ll -w y.tab.c
 ```
