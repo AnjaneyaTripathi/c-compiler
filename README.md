@@ -6,6 +6,7 @@
 yacc -d -v lexer.y
 lex parser.l
 gcc -ll -w y.tab.c
+./a.out<input1.c
 ```
 
 ## What is LEX?
