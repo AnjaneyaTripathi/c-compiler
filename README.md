@@ -3,8 +3,8 @@
 ## Using the Compiler
 
 ```
-yacc -d -v lexer.y
-lex parser.l
+lex lexer.l
+yacc -d -v parser.y
 gcc -ll -w y.tab.c
 ./a.out<input1.c
 ```
