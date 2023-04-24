@@ -3,16 +3,7 @@
     #include<string.h>
     #include<stdlib.h>
     #include<ctype.h>
-    #include"lex.yy.c"
     
-    void yyerror(const char *s);
-    int yylex();
-    int yywrap();
-    void add(char);
-    void insert_type();
-    int search(char *);
-    void insert_type();
-
     struct dataType {
         char * id_name;
         char * data_type;
@@ -24,6 +15,15 @@
     int q;
     char type[10];
     extern int countn;
+	char * yytext;
+
+    void yyerror(const char *s);
+    int yylex();
+    int yywrap();
+    void add(char);
+    void insert_type();
+    int search(char *);
+    void insert_type();
 %}
 
 %token VOID CHARACTER PRINTFF SCANFF INT FLOAT CHAR FOR IF ELSE TRUE FALSE NUMBER FLOAT_NUM ID LE GE EQ NE GT LT AND OR STR ADD MULTIPLY DIVIDE SUBTRACT UNARY INCLUDE RETURN 

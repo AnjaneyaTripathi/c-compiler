@@ -1,11 +1,16 @@
 # Frontend Phase of a C Compiler
 
+## Environment
+* flex 2.6.4
+* bison (GNU Bison) 3.5.1
+* Ubuntu 20.04.5 LTS
+
 ## Using the Compiler
 
 ```
 lex lexer.l
-yacc -d -v parser.y
-gcc -ll -w y.tab.c
+yacc -d parser.y
+cc lex.yy.c y.tab.c
 ./a.out<input1.c
 ```
 
